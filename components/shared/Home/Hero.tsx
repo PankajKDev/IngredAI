@@ -1,12 +1,10 @@
 "use client";
 
-
 import { motion } from "motion/react";
 
 export function HeroSectionOne() {
   return (
     <div className="relative mx-auto my-10 flex max-w-7xl flex-col items-center justify-center">
-    
       <div className="absolute inset-y-0 left-0 h-full w-px">
         <div className="absolute top-0 h-40 w-px " />
       </div>
@@ -49,7 +47,8 @@ export function HeroSectionOne() {
           }}
           className="relative z-10 mx-auto max-w-xl py-4 text-center text-lg font-normal text-neutral-600 dark:text-neutral-400"
         >
-        With IngredAI,Achieve your healthy eating goals without affecting taste and losing fat together to attain your dream body
+          With IngredAI,Achieve your healthy eating goals without affecting
+          taste and losing fat together to attain your dream body
         </motion.p>
         <motion.div
           initial={{
@@ -88,7 +87,7 @@ export function HeroSectionOne() {
         >
           <div className="w-full overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700">
             <img
-              src="./hero.jpg"
+              src="/Home/hero.jpg"
               alt="Landing page preview"
               className="aspect-[16/9] h-auto w-full object-cover"
               height={1000}
@@ -100,4 +99,3 @@ export function HeroSectionOne() {
     </div>
   );
 }
-
