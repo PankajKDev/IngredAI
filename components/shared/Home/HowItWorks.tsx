@@ -5,9 +5,9 @@ import React from "react";
 
 function HowItWorks() {
   return (
-    <div className="w-full flex flex-col items-center gap-5 justify-center">
+    <div className="w-full flex flex-col items-center gap-5 justify-center mt-16">
       <div className="w-[80%]">
-        <h1 className="text-5xl mask-linear-from-neutral-300 text-center justify-center items-center font-sans  font-semibold">
+        <h1 className="text-5xl text-orange-400 mask-linear-from-neutral-300 text-center justify-center items-center font-sans  font-semibold">
           How it works?
         </h1>
         <div className="flex flex-col justify-center items-center    md:flex-row gap-5 mt-14">
