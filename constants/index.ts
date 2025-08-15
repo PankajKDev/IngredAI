@@ -5,15 +5,15 @@ export const navLinks = [
   },
   {
     name: "Recipe",
-    linkname: "/dashboard",
+    linkname: "/recipe",
   },
   {
     name: "Pantry",
-    linkname: "/leads",
+    linkname: "/pantry",
   },
   {
     name: "Pricing",
-    linkname: "/projects",
+    linkname: "/pricing",
   },
 ];
 

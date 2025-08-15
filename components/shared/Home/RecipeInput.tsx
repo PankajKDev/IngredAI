@@ -22,7 +22,7 @@ export function RecipeInput() {
     console.log("submitted");
   };
   return (
-    <div className="h-[40rem] flex flex-col justify-center  items-center px-4">
+    <div className="h-[30rem] flex flex-col justify-center  items-center px-4">
       <h2 className="mb-10 sm:mb-20  text-xl text-center sm:text-5xl  text-orange-500 font-semibold font-sans">
         Generate Recipe for your dietary needs
       </h2>
