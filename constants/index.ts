@@ -83,3 +83,29 @@ export const testimonials = [
     src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
+
+export const freePlan = {
+  name: "Free Tier",
+  features: [
+    { feature: "AI Recipe Generator (basic filters)", present: true },
+    { feature: "Recipe Library (standard set)", present: true },
+    { feature: "Recipe Saves (up to 20)", present: true },
+    { feature: "Calorie Tracking (manual only)", present: true },
+    { feature: "Macro Breakdown (basic view)", present: true },
+    { feature: "Shopping List (1–2 recipes)", present: true },
+    { feature: "Community Access (browse only)", present: true },
+  ],
+};
+
+export const premiumPlan = {
+  name: "Premium Tier",
+  features: [
+    { feature: "AI Recipe Generator (all filters)", present: true },
+    { feature: "Recipe Library (full access)", present: true },
+    { feature: "Recipe Saves (unlimited)", present: true },
+    { feature: "Calorie Tracking (smart scan)", present: true },
+    { feature: "Macro Breakdown (detailed view)", present: true },
+    { feature: "Shopping List (weekly smart)", present: true },
+    { feature: "Community Access (post & share)", present: true },
+  ],
+};
