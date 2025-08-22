@@ -2,7 +2,7 @@
 
 import { PlaceholdersAndVanishInput } from "../../ui/placeholders-and-vanish-input";
 
-export function () {
+export function WorkoutPlanBanner() {
   const placeholders = [
     "Give me a keto-friendly chicken curry recipe",
 
@@ -33,3 +33,4 @@ export function () {
       />
     </div>
   );
+}
