@@ -5,7 +5,7 @@ function layout({ children }: { children: ReactNode }) {
   return (
     <>
       <Navbar />
-      <div className="w-full flex flex-col items-center">{children}</div>
+      <div className="w-full flex flex-col ">{children}</div>
     </>
   );
 }

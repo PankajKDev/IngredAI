@@ -2,14 +2,14 @@ import { google } from "@ai-sdk/google";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { generateText } from "ai";
 
-export async function GET() {
-  const { sessionId } = await auth();
-  //to access token temporarily
-  const client = await clerkClient();
-  const token = await client.sessions.getToken(sessionId);
+// export async function GET() {
+//   const { sessionId } = await auth();
+//   //to access token temporarily
+//   const client = await clerkClient();
+//   const token = await client.sessions.getToken(sessionId);
 
-  return Response.json({ token });
-}
+//   return Response.json({ token });
+// }
 
 export async function POST() {
   const userIngredients = "salom fish and tofu";
@@ -56,6 +56,7 @@ Before any other action, you must perform a safety and sanity check on the user'
             "fat": "Nothing"
           }
         }
+
       ]
     }
 

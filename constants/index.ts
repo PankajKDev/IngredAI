@@ -8,8 +8,8 @@ export const navLinks = [
     linkname: "/recipe",
   },
   {
-    name: "Pantry",
-    linkname: "/pantry",
+    name: "Workout",
+    linkname: "/workout",
   },
   {
     name: "Pricing",
