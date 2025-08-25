@@ -109,3 +109,80 @@ export const premiumPlan = {
     { feature: "Community Access (post & share)", present: true },
   ],
 };
+
+export const favoriteRecipes = [
+  {
+    id: "1",
+    title: "Grilled Chicken Breast with Quinoa",
+    image: "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400",
+    calories: 485,
+    protein: 42,
+    fat: 12,
+    cookTime: 25,
+    servings: 2,
+    difficulty: "Easy",
+    isFavorite: true,
+  },
+  {
+    id: "2",
+    title: "Salmon Avocado Bowl",
+    image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400",
+    calories: 520,
+    protein: 38,
+    fat: 28,
+    cookTime: 15,
+    servings: 1,
+    difficulty: "Easy",
+    isFavorite: true,
+  },
+];
+
+export const userMadeRecipes = [
+  {
+    id: "3",
+    title: "My Special Protein Smoothie",
+    image: "https://images.unsplash.com/photo-1553530979-d6cb2ac801d2?w=400",
+    calories: 320,
+    protein: 28,
+    fat: 8,
+    cookTime: 5,
+    servings: 1,
+    difficulty: "Easy",
+  },
+];
+
+export const premadeRecipes = [
+  {
+    id: "4",
+    title: "Mediterranean Turkey Wrap",
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400",
+    calories: 420,
+    protein: 32,
+    fat: 15,
+    cookTime: 10,
+    servings: 1,
+    difficulty: "Easy",
+  },
+  {
+    id: "5",
+    title: "Asian Beef Stir Fry",
+    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400",
+    calories: 380,
+    protein: 35,
+    fat: 18,
+    cookTime: 20,
+    servings: 2,
+    difficulty: "Medium",
+  },
+  {
+    id: "6",
+    title: "Veggie Power Bowl",
+    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400",
+    calories: 350,
+    protein: 15,
+    fat: 12,
+    cookTime: 15,
+    servings: 1,
+    difficulty: "Easy",
+  },
+];

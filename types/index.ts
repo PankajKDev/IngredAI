@@ -6,3 +6,25 @@ export interface IPricingData {
   name: string;
   features: Features[];
 }
+
+export interface Recipe {
+  id: string;
+  title: string;
+  image: string;
+  calories: number;
+  protein: number;
+  fat: number;
+  cookTime: number;
+  servings: number;
+  difficulty: string;
+  isFavorite?: boolean;
+}
+
+export interface RecipeSectionProps {
+  title: string;
+  icon: React.ReactNode;
+  recipes: Recipe[];
+  onViewRecipe: (id: string) => void;
+  onToggleFavorite?: (id: string) => void;
+  showViewAll?: boolean;
+}
