@@ -1,7 +1,7 @@
 "use client";
 import { authLinks, navLinks } from "@/constants";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { MenuIcon } from "lucide-react";
+import { Crown, CrownIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 function Navbar() {
@@ -42,7 +42,7 @@ function Navbar() {
           />
           <SignedIn>
             <div
-              className={`w-63 h-64  flex-col absolute bg-black right-0 top-0  mt-15 ${
+              className={`w-72 h-72 z-[100] rounded-b-lg  justify-center  flex-col absolute bg-black right-0 top-0  mt-15 ${
                 isOpen ? "flex" : "hidden"
               }`}
             >
@@ -51,7 +51,7 @@ function Navbar() {
                   {navLinks.map((item, index) => (
                     <Link
                       onClick={() => setIsOpen((state) => !state)}
-                      className="hoverLink p-4"
+                      className="hoverLink p-3"
                       href={item.linkname}
                       key={index}
                     >
@@ -62,12 +62,18 @@ function Navbar() {
               ) : (
                 ""
               )}
-              <UserButton />
+              <div className="w-full items-center flex gap-2 ml-5">
+                <UserButton />
+                <div className="font-sans gap-2 bg-orange-500 flex rounded-l-lg rounded-r-lg font-semibold  p-1 text-xs">
+                  <CrownIcon size={16} />
+                  Premium Active
+                </div>
+              </div>
             </div>
           </SignedIn>
           <SignedOut>
             <div
-              className={`w-63 h-64  flex-col absolute  bg-black z-10 right-0 top-0  mt-15 ${
+              className={`w-72 h-72 z-[100] rounded-b-lg  bg-black  flex-col absolute right-0 top-0  mt-15 ${
                 isOpen ? "flex" : "hidden"
               }`}
             >
@@ -76,7 +82,7 @@ function Navbar() {
                   {authLinks.map((item, index) => (
                     <Link
                       onClick={() => setIsOpen((state) => !state)}
-                      className="hoverLink p-4"
+                      className=" p-4"
                       href={item.linkname}
                       key={index}
                     >
