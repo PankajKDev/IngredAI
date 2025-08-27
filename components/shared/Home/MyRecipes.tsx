@@ -1,14 +1,23 @@
-import HomeRecipeCard from "@/components/ui/HomeRecipeCard";
-import { div } from "motion/react-client";
+"use client";
+import RecipeSection from "../Recipe/RecipeSection";
+import { LeafyGreen, Sparkles } from "lucide-react";
+import { premadeRecipes, userMadeRecipes } from "@/constants";
 
 function MyRecipes() {
+  const handleViewRecipe = (id: string) => {
+    // Navigate to recipe detail page
+    console.log("View recipe:", id);
+    // router.push(`/recipe/${id}`);
+  };
+
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="w-full grid grid-cols-1 gap-5 md:grid-cols-3 place-items-center">
-        <HomeRecipeCard />
-        <HomeRecipeCard />
-        <HomeRecipeCard />
-      </div>
+    <div className="w-[80%]">
+      <RecipeSection
+        title="Must Try"
+        icon={<LeafyGreen className="w-5 h-5 text-green-400" />}
+        recipes={premadeRecipes}
+        onViewRecipe={handleViewRecipe}
+      />
     </div>
   );
 }

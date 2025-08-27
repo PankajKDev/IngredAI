@@ -20,7 +20,9 @@ export default function Home() {
       </SignedOut>
       <SignedIn>
         <RecipeInput />
-        <MyRecipes />
+        <div className="w-full flex justify-center ">
+          <MyRecipes />
+        </div>
       </SignedIn>
     </>
   );
