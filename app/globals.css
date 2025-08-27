@@ -129,3 +129,12 @@
     @apply hover:text-slate-600 font-medium hover:font-bold transition-colors duration-300 ease-in-out;
   }
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
