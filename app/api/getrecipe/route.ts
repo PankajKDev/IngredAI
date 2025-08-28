@@ -3,13 +3,13 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { generateText } from "ai";
 
 export async function GET() {
-  const { sessionId } = await auth();
+ // const { sessionId } = await auth();
   //to access token temporarily
-  const client = await clerkClient();
-  const token = await client.sessions.getToken(sessionId);
+  //const client = await clerkClient();
+  //const token = await client.sessions.getToken(sessionId);
 
-  return Response.json({ token });
-  return Response.json({ success: true }, { status: 200 });
+  //return Response.json({ token });
+  //return Response.json({ success: true }, { status: 200 });
 }
 
 export async function POST(request: Request) {
