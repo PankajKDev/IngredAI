@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { PlaceholdersAndVanishInput } from "../../ui/placeholders-and-vanish-input";
 
 export function RecipeInput() {
+  const [inputState, setInputState] = useState({});
   const placeholders = [
     "Give me a keto-friendly chicken curry recipe",
 
@@ -15,11 +17,24 @@ export function RecipeInput() {
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+    setInputState(e.target.value);
   };
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitted");
+    try {
+      const response = await fetch("/api/getrecipe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inputState }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(`Failed to fetch recipe:`, error);
+    }
   };
   return (
     <div className="h-[30rem] flex flex-col justify-center  items-center px-4">

@@ -3,18 +3,19 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { generateText } from "ai";
 
 export async function GET() {
-  // const { sessionId } = await auth();
-  // //to access token temporarily
-  // const client = await clerkClient();
-  // const token = await client.sessions.getToken(sessionId);
+  const { sessionId } = await auth();
+  //to access token temporarily
+  const client = await clerkClient();
+  const token = await client.sessions.getToken(sessionId);
 
-  // return Response.json({ token });
+  return Response.json({ token });
   return Response.json({ success: true }, { status: 200 });
 }
 
 export async function POST(request: Request) {
-  const userIngredients = "salom fish and tofu";
-  const userPreferences = "hot and spicy mexican under 500 calories";
+  const { inputState } = await request.json();
+  console.log(inputState);
+
   const { text } = await generateText({
     model: google("gemini-2.0-flash-exp"),
     prompt: `You are an expert culinary AI assistant named "PantryChef". Your primary goal is to provide safe, delicious, and easy-to-follow recipes. You must strictly follow the directives below.
@@ -68,11 +69,7 @@ If, and only if, all ingredients are determined to be safe and edible, proceed w
 Your Task:
 Based on the user's available ingredients and preferences, generate three distinct and complete recipe ideas.
 
-User Inputs:
-
-    Ingredients Available: ${userIngredients}
-
-    User Preferences: ${userPreferences}
+User Input:${inputState}
 
 Output Requirements:
 You must return a single, valid JSON object with no surrounding text or markdown. The root of this object must be a key named recipes, which is an array containing exactly three recipe objects.
@@ -117,4 +114,5 @@ JSON
 
 `,
   });
+  return Response.json({ text });
 }
