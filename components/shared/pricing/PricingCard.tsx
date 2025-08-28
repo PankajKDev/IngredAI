@@ -9,7 +9,7 @@ import {
 
 function PricingCard({ pricingData }: { pricingData: IPricingData }) {
   return (
-    <div className="w-64   p-5 h-[500px]  rounded-lg border flex flex-col justify-between">
+    <div className="w-[90%] md:w-72    p-5 h-[500px]  rounded-lg border flex flex-col justify-between">
       <h1 className="font-sans text-xl font-bold text-slate-300">
         {pricingData.name}
       </h1>

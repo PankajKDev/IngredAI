@@ -3,14 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { UserButton, useUser } from "@clerk/nextjs";
-
-const navigationItems = [
-  { name: "Home", href: "/" },
-  { name: "Recipe", href: "/recipe" },
-  { name: "Workout", href: "/workout" },
-  { name: "Pricing", href: "/pricing" },
-];
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { authLinks, navLinks } from "@/constants";
 
 export function DesktopNavigation() {
   const pathname = usePathname();
@@ -20,33 +14,46 @@ export function DesktopNavigation() {
 
   return (
     <div className="hidden md:flex items-center space-x-8">
-      {navigationItems.map((item) => {
-        const isActive = pathname === item.href;
+      <SignedIn>
+        {navLinks.map((item) => {
+          const isActive = pathname === item.linkname;
 
-        return (
+          return (
+            <Link
+              key={item.name}
+              href={item.linkname}
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-foreground relative",
+                isActive ? "text-foreground" : "text-muted-foreground"
+              )}
+            >
+              {item.name}
+              {isActive && (
+                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-secondary rounded-full" />
+              )}
+            </Link>
+          );
+        })}
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+            <UserButton />
+          </div>
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+            Premium Active
+          </span>
+        </div>
+      </SignedIn>
+      <SignedOut>
+        {authLinks.map((item) => (
           <Link
             key={item.name}
-            href={item.href}
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-foreground relative",
-              isActive ? "text-foreground" : "text-muted-foreground"
-            )}
+            href={item.linkname}
+            className="text-sm font-medium transition-colors hover:text-foreground relative"
           >
             {item.name}
-            {isActive && (
-              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-secondary rounded-full" />
-            )}
           </Link>
-        );
-      })}
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-          <UserButton />
-        </div>
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-          Premium Active
-        </span>
-      </div>
+        ))}
+      </SignedOut>
     </div>
   );
 }

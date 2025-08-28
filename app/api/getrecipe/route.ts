@@ -12,7 +12,7 @@ export async function GET() {
   return Response.json({ success: true }, { status: 200 });
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   const userIngredients = "salom fish and tofu";
   const userPreferences = "hot and spicy mexican under 500 calories";
   const { text } = await generateText({
@@ -117,5 +117,4 @@ JSON
 
 `,
   });
-  console.log(text);
 }
