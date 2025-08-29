@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { PlaceholdersAndVanishInput } from "../../ui/placeholders-and-vanish-input";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export function RecipeInput() {
   const [inputState, setInputState] = useState({});
@@ -22,18 +24,20 @@ export function RecipeInput() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/getrecipe", {
+      toast("Generating recipe...");
+      const fetchData = await fetch("/api/getrecipe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ inputState }),
       });
-
-      const data = await response.json();
+      const data = await fetchData.json();
       console.log(data);
     } catch (error) {
       console.error(`Failed to fetch recipe:`, error);
+    } finally {
+      toast("Finished generating recipe");
     }
   };
   return (
@@ -46,6 +50,7 @@ export function RecipeInput() {
         onChange={handleChange}
         onSubmit={onSubmit}
       />
+      <Toaster />
     </div>
   );
 }
