@@ -3,31 +3,18 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { generateText } from "ai";
 import { createApi } from "unsplash-js";
 
-<<<<<<< HEAD
-export async function GET() {
- // const { sessionId } = await auth();
-  //to access token temporarily
-  //const client = await clerkClient();
-  //const token = await client.sessions.getToken(sessionId);
-
-  //return Response.json({ token });
-  //return Response.json({ success: true }, { status: 200 });
-}
-=======
 const serverApi = createApi({
   accessKey: process.env.UNSPLASH_ACCESS_KEY!,
 });
 
-// export async function GET() {
-//   const { sessionId } = await auth();
-//   //to access token temporarily
-//   const client = await clerkClient();
-//   const token = await client.sessions.getToken(sessionId!);
-
-//   return Response.json({ token });
-//   return Response.json({ success: true }, { status: 200 });
-// }
->>>>>>> 51ae964 ({Frontend | Backend]:Created sonner for recipe and setup unsplash api for recipe images)
+export async function GET() {
+  // const { sessionId } = await auth();
+  //to access token temporarily
+  //const client = await clerkClient();
+  //const token = await client.sessions.getToken(sessionId);
+  //return Response.json({ token });
+  //return Response.json({ success: true }, { status: 200 });
+}
 
 export async function POST(request: Request) {
   const { inputState } = await request.json();
