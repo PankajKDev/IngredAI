@@ -48,8 +48,9 @@ const RecipeSchema = new Schema(
     servings: {
       type: Number,
     },
-    ingredients: [IngredientSchema],
-    instructions: [InstructionSchema],
+    difficulty: {
+      type: String,
+    },
     calories: {
       type: Number,
     },
@@ -62,9 +63,8 @@ const RecipeSchema = new Schema(
     carbohydrates: {
       type: Number,
     },
-    difficulty: {
-      type: String,
-    },
+    ingredients: [IngredientSchema],
+    instructions: [InstructionSchema],
   },
   {
     timestamps: true,
@@ -74,3 +74,17 @@ const RecipeSchema = new Schema(
 const Recipe = models.Recipe || model("Recipe", RecipeSchema);
 
 export default Recipe;
+
+// title: data.title,
+//   userId: userId,
+//   description: data.description,
+//   cuisine: data.cuisine,
+//   cookTime: data.cookTime,
+//   servings: data.servings,
+//   difficulty: data.difficulty,
+//   calories: data.calories,
+//   protein: data.protein,
+//   fat: data.fat,
+//   carbohydrates: data.carbohydrates,
+//   ingredients: data.ingredients,
+//   instructions: data.instructions,

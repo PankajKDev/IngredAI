@@ -20,7 +20,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   await connectDB();
-  const { userId } = auth();
+  const { userId } = await auth();
   const { inputState } = await request.json();
   console.log(inputState);
   const { text } = await generateText({
@@ -118,54 +118,24 @@ JSON Object Structure:
     const imageUrl = "https://placehold.co/600x400?text=Error+fetching+image";
   }
 
-  const newRecipe = new Recipe({
-    title: data.title,
-    userId,
-  });
-  return Response.json({ text });
+  try {
+    const newRecipe = new Recipe({
+      title: data.title,
+      userId: userId,
+      description: data.description,
+      cuisine: data.cuisine,
+      cookTime: data.cookTime,
+      servings: data.servings,
+      difficulty: data.difficulty,
+      calories: data.calories,
+      protein: data.protein,
+      fat: data.fat,
+      carbohydrates: data.carbohydrates,
+      ingredients: data.ingredients,
+      instructions: data.instructions,
+    });
+    const savedRecipe = await newRecipe.save();
+    const savedRecipeID = savedRecipe._id;
+    console.log(savedRecipeID);
+  } catch (error) {}
 }
-
-// const RecipeSchema = new Schema(
-//   {
-//     title: {
-//       type: String,
-//       required: true,
-//     },
-//     userId: {
-//       type: String,
-//       required: true,
-//     },
-//     description: {
-//       type: String,
-//     },
-//     cuisine: {
-//       type: String,
-//     },
-//     cookTime: {
-//       type: Number,
-//     },
-//     servings: {
-//       type: Number,
-//     },
-//     ingredients: [IngredientSchema],
-//     instructions: [InstructionSchema],
-//     calories: {
-//       type: Number,
-//     },
-//     protein: {
-//       type: Number,
-//     },
-//     fat: {
-//       type: Number,
-//     },
-//     carbohydrates: {
-//       type: Number,
-//     },
-//     difficulty: {
-//       type: String,
-//     },
-//   },
-//   {
-//     timestamps: true,
-//   }
-// );
