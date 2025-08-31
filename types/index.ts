@@ -9,6 +9,7 @@ export interface IPricingData {
 
 export interface Recipe {
   id: string;
+  userID: string;
   title: string;
   image: string;
   calories: number;

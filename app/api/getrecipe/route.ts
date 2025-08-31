@@ -1,3 +1,5 @@
+import connectDB from "@/lib/connectDB";
+import Recipe from "@/models/Recipe.schema";
 import { google } from "@ai-sdk/google";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { generateText } from "ai";
@@ -17,9 +19,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  await connectDB();
+  const { userId } = auth();
   const { inputState } = await request.json();
   console.log(inputState);
-
   const { text } = await generateText({
     model: google("gemini-2.0-flash-exp"),
     prompt: `
@@ -69,8 +72,7 @@ Based on the user's available ingredients and preferences, generate the best pos
 **User Input:** ${inputState}
 
 **Output Requirements:**
-You must return a single, valid JSON object without any surrounding text or markdown. This object must contain a single recipe following the exact structure and data types below.
-
+You must return a single, valid JSON object without any surrounding text or markdown. This object must contain a single recipe following the exact structure and data types below while using only single backticks surrounding it strictly.
 JSON Object Structure:
 {
   "title": "string",
@@ -101,20 +103,69 @@ JSON Object Structure:
     `,
   });
 
-  console.log(text);
-  try {
-    const result = await serverApi.photos.getRandom({
-      query: `${inputState}`,
-      count: 1,
-    });
-
-    if (result.errors) {
-      throw new Error(result.errors[0]);
-    }
-    const photos = result.response;
+  const cleanJSON = text.slice(7, -3);
+  const parsedjson = JSON.parse(cleanJSON);
+  const data = parsedjson.recipes[0];
+  const result = await serverApi.photos.getRandom({
+    query: `${data.image}`,
+    count: 1,
+  });
+  const photos = result.response;
+  if (Array.isArray(photos) && photos.length > 0) {
     const photo = photos[0];
     const imageUrl = photo?.urls?.regular;
-  } catch (error) {}
+  } else {
+    const imageUrl = "https://placehold.co/600x400?text=Error+fetching+image";
+  }
 
+  const newRecipe = new Recipe({
+    title: data.title,
+    userId,
+  });
   return Response.json({ text });
 }
+
+// const RecipeSchema = new Schema(
+//   {
+//     title: {
+//       type: String,
+//       required: true,
+//     },
+//     userId: {
+//       type: String,
+//       required: true,
+//     },
+//     description: {
+//       type: String,
+//     },
+//     cuisine: {
+//       type: String,
+//     },
+//     cookTime: {
+//       type: Number,
+//     },
+//     servings: {
+//       type: Number,
+//     },
+//     ingredients: [IngredientSchema],
+//     instructions: [InstructionSchema],
+//     calories: {
+//       type: Number,
+//     },
+//     protein: {
+//       type: Number,
+//     },
+//     fat: {
+//       type: Number,
+//     },
+//     carbohydrates: {
+//       type: Number,
+//     },
+//     difficulty: {
+//       type: String,
+//     },
+//   },
+//   {
+//     timestamps: true,
+//   }
+// );
