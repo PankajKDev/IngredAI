@@ -1,8 +1,9 @@
 import { Recipe } from "@/types";
 import { Heart, Clock, Users } from "lucide-react";
 
+type PreMadeRecipe = Omit<Recipe, "userID">;
 interface RecipeCardProps {
-  recipe: Recipe;
+  recipe: PreMadeRecipe;
   onViewRecipe: (id: string) => void;
   onToggleFavorite?: (id: string) => void;
 }
