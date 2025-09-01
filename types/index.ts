@@ -29,3 +29,8 @@ export interface RecipeSectionProps {
   onToggleFavorite?: (id: string) => void;
   showViewAll?: boolean;
 }
+
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}
