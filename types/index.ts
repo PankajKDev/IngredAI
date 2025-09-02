@@ -10,6 +10,7 @@ export interface IPricingData {
 export interface Recipe {
   id: string;
   userID: string;
+  imageUrl: string;
   title: string;
   image: string;
   calories: number;
@@ -30,7 +31,7 @@ export interface RecipeSectionProps {
   showViewAll?: boolean;
 }
 
-interface RouteParams {
+export interface RouteParams {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string>>;
 }

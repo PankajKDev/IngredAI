@@ -4,8 +4,10 @@ import { useState } from "react";
 import { PlaceholdersAndVanishInput } from "../../ui/placeholders-and-vanish-input";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function RecipeInput() {
+  const router = useRouter();
   const [inputState, setInputState] = useState({});
   const placeholders = [
     "Give me a keto-friendly chicken curry recipe",
@@ -33,7 +35,7 @@ export function RecipeInput() {
         body: JSON.stringify({ inputState }),
       });
       const data = await fetchData.json();
-      console.log(data);
+      router.push(`/recipe/${data.recipeId}`);
     } catch (error) {
       console.error(`Failed to fetch recipe:`, error);
     } finally {

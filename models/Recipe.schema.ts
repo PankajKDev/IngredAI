@@ -14,15 +14,12 @@ const InstructionSchema = new Schema({
 const IngredientSchema = new Schema({
   name: {
     type: String,
-    required: true,
   },
   quantity: {
     type: String,
-    required: true,
   },
   unit: {
     type: String,
-    required: true,
   },
 });
 
@@ -35,6 +32,9 @@ const RecipeSchema = new Schema(
     userId: {
       type: String,
       required: true,
+    },
+    imageUrl: {
+      type: String,
     },
     description: {
       type: String,
@@ -65,6 +65,10 @@ const RecipeSchema = new Schema(
     },
     ingredients: [IngredientSchema],
     instructions: [InstructionSchema],
+    isFavourite: {
+      type: Boolean,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -74,17 +78,3 @@ const RecipeSchema = new Schema(
 const Recipe = models.Recipe || model("Recipe", RecipeSchema);
 
 export default Recipe;
-
-// title: data.title,
-//   userId: userId,
-//   description: data.description,
-//   cuisine: data.cuisine,
-//   cookTime: data.cookTime,
-//   servings: data.servings,
-//   difficulty: data.difficulty,
-//   calories: data.calories,
-//   protein: data.protein,
-//   fat: data.fat,
-//   carbohydrates: data.carbohydrates,
-//   ingredients: data.ingredients,
-//   instructions: data.instructions,

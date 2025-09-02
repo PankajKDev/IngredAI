@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   const { text } = await generateText({
     model: google("gemini-2.0-flash-exp"),
     prompt: `
-    You are an expert culinary AI assistant named "PantryChef". Your primary goal is to provide a single, safe, delicious, and easy-to-follow recipe. You must strictly follow the directives below.
+    You are an expert culinary AI assistant named "IngredAI". Your primary goal is to provide a single, safe, delicious, and easy-to-follow recipe. You must strictly follow the directives below.
 
 ---
 ### Directive 1: Safety and Input Validation (Highest Priority)
@@ -41,25 +41,28 @@ JSON Response for Unsafe Inputs:
   "recipes": [
     {
       "title": "The 'Nothing' Burger",
+      "imageUrl": "string (the image name to be searched on unsplash which is funny)",
       "description": "An inedible dish for an illogical request. Pairs well with a glass of common sense.",
       "cuisine": "Conceptual",
       "cookTime": 0,
       "servings": 0,
+      "difficulty": "Hard",
+      "calories": 0,
+      "protein": 0,
+      "fat": 0,
+      "carbohydrates": 0,
       "ingredients": [],
       "instructions": [
         {
           "step": 1,
           "details": "Please review your ingredient list and provide only safe, edible items."
         }
-      ],
-      "calories": 0,
-      "protein": 0,
-      "fat": 0,
-      "carbohydrates": 0,
-      "difficulty": "Impossible"
+      ]
     }
   ]
 }
+
+
 
 ---
 ### Directive 2: Recipe Generation (Only if all inputs are safe)
@@ -76,7 +79,7 @@ You must return a single, valid JSON object without any surrounding text or mark
 JSON Object Structure:
 {
   "title": "string",
-  "image": "string (name of an image to search on Unsplash relevant to the recipe, e.g., 'Spicy Tofu Stir-fry')",
+  "image": "string (name of a food image to search on Unsplash, e.g., 'Spicy Tofu Stir-fry food')",
   "description": "string (A short, enticing one-sentence description of the dish.)",
   "cuisine": "string (Cuisine type, e.g., 'Italian', 'Mexican', 'Asian')",
   "cookTime": "number (Estimated total time in minutes, e.g., 30)",
@@ -100,27 +103,29 @@ JSON Object Structure:
     }
   ]
 }
+
     `,
   });
-
+  console.log(text);
   const cleanJSON = text.slice(7, -3);
   const parsedjson = JSON.parse(cleanJSON);
   const data = parsedjson.recipes[0];
-  const result = await serverApi.photos.getRandom({
+  const result = await serverApi.search.getPhotos({
     query: `${data.image}`,
-    count: 1,
+    perPage: 1,
+    orderBy: "relevant",
   });
-  const photos = result.response;
-  if (Array.isArray(photos) && photos.length > 0) {
-    const photo = photos[0];
-    const imageUrl = photo?.urls?.regular;
-  } else {
-    const imageUrl = "https://placehold.co/600x400?text=Error+fetching+image";
-  }
+  const photos = result.response?.results;
+
+  const photo = Array.isArray(photos) && photos.length > 0 ? photos[0] : null;
+  const imageUrl =
+    photo?.urls?.regular ||
+    "https://placehold.co/600x400/black/orange?text=Error+fetching+image";
 
   try {
     const newRecipe = new Recipe({
       title: data.title,
+      imageUrl: imageUrl,
       userId: userId,
       description: data.description,
       cuisine: data.cuisine,
@@ -133,9 +138,12 @@ JSON Object Structure:
       carbohydrates: data.carbohydrates,
       ingredients: data.ingredients,
       instructions: data.instructions,
+      isFavourite: false,
     });
     const savedRecipe = await newRecipe.save();
     const savedRecipeID = savedRecipe._id;
-    console.log(savedRecipeID);
-  } catch (error) {}
+    return Response.json({ recipeId: savedRecipeID }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+  }
 }
