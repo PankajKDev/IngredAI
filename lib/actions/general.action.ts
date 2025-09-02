@@ -14,6 +14,10 @@ export async function fetchRecipeById(id: string) {
 export async function fetchRecipesByUserId(id: string) {
   await connectDB();
   try {
-    const fetchedRecipes = await Recipe.find();
-  } catch (error) {}
+    const fetchedRecipes = await Recipe.find({ userId: id }).lean();
+    console.log(...fetchedRecipes);
+    return JSON.parse(JSON.stringify(fetchedRecipes));
+  } catch (error) {
+    console.log(`Error fetching recipes ${error}`);
+  }
 }

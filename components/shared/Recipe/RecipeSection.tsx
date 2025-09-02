@@ -5,8 +5,7 @@ const RecipeSection: React.FC<RecipeSectionProps> = ({
   title,
   icon,
   recipes,
-  onViewRecipe,
-  onToggleFavorite,
+
   showViewAll = true,
 }) => {
   return (
@@ -30,12 +29,7 @@ const RecipeSection: React.FC<RecipeSectionProps> = ({
       {recipes.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {recipes.slice(0, 8).map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onViewRecipe={onViewRecipe}
-              onToggleFavorite={onToggleFavorite}
-            />
+            <RecipeCard key={recipe._id} recipe={recipe} />
           ))}
         </div>
       ) : (

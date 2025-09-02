@@ -1,10 +1,13 @@
-"use client";
 import React from "react";
 import { Heart, Clock, Users, ChefHat, Sparkles } from "lucide-react";
 import RecipeSection from "@/components/shared/Recipe/RecipeSection";
-import { favoriteRecipes, premadeRecipes, userMadeRecipes } from "@/constants";
+import { fetchRecipesByUserId } from "@/lib/actions/general.action";
+import { useAuth } from "@clerk/nextjs";
+import { useReducedMotion } from "motion/react";
+import { auth } from "@clerk/nextjs/server";
 
-const RecipePage: React.FC = () => {
+const RecipePage: React.FC = async () => {
+  const { userId } = await auth();
   const handleViewRecipe = (id: string) => {
     // Navigate to recipe detail page
     console.log("View recipe:", id);
@@ -15,7 +18,7 @@ const RecipePage: React.FC = () => {
     // Toggle favorite status
     console.log("Toggle favorite:", id);
   };
-
+  const recipes = await fetchRecipesByUserId(userId!);
   return (
     <div className=" ">
       {/* Header */}
@@ -36,29 +39,19 @@ const RecipePage: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Favorite Recipes */}
-        <RecipeSection
+        {/* <RecipeSection
           title="Favorite Recipes"
           icon={<Heart className="w-5 h-5 text-red-400" />}
           recipes={favoriteRecipes}
           onViewRecipe={handleViewRecipe}
           onToggleFavorite={handleToggleFavorite}
-        />
-
-        {/* User Made Recipes */}
+        /> */}
         <RecipeSection
-          title="User Made"
-          icon={<Sparkles className="w-5 h-5 text-purple-400" />}
-          recipes={userMadeRecipes}
+          title="Recipes made by you"
+          icon={<Clock className="w-5 h-5 text-blue-400" />}
+          recipes={recipes}
           onViewRecipe={handleViewRecipe}
-        />
-
-        {/* Premade Recipes */}
-        <RecipeSection
-          title="Premade Recipes"
-          icon={<ChefHat className="w-5 h-5 text-orange-400" />}
-          recipes={premadeRecipes}
-          onViewRecipe={handleViewRecipe}
-          onToggleFavorite={handleToggleFavorite}
+          onnToggleFavorite={handleToggleFavorite}
         />
       </div>
     </div>

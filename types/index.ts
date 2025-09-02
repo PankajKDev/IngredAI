@@ -7,27 +7,10 @@ export interface IPricingData {
   features: Features[];
 }
 
-export interface Recipe {
-  id: string;
-  userID: string;
-  imageUrl: string;
-  title: string;
-  image: string;
-  calories: number;
-  protein: number;
-  fat: number;
-  cookTime: number;
-  servings: number;
-  difficulty: string;
-  isFavorite?: boolean;
-}
-
 export interface RecipeSectionProps {
   title: string;
   icon: React.ReactNode;
   recipes: Recipe[];
-  onViewRecipe: (id: string) => void;
-  onToggleFavorite?: (id: string) => void;
   showViewAll?: boolean;
 }
 
@@ -45,4 +28,24 @@ export interface Ingredient {
   name: string;
   quantity: number;
   unit: string;
+}
+export interface Recipe {
+  _id?: string;
+  title: string;
+  userId: string;
+  imageUrl?: string;
+  description?: string;
+  cuisine?: string;
+  cookTime?: number;
+  servings?: number;
+  difficulty?: string;
+  calories?: number;
+  protein?: number;
+  fat?: number;
+  carbohydrates?: number;
+  ingredients: Ingredient[];
+  instructions: Instruction[];
+  isFavourite: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
