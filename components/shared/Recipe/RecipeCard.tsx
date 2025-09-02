@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 
 interface RecipeCardProps {
   recipe: Recipe;
-  onViewRecipe: (id: string) => void;
-  onToggleFavorite?: (id: string) => void;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
