@@ -2,8 +2,6 @@ import CallToAction from "@/components/shared/Home/CallToAction";
 
 import { HeroSectionOne } from "@/components/shared/Home/Hero";
 import HowItWorks from "@/components/shared/Home/HowItWorks";
-import MyRecipes from "@/components/shared/Home/MyRecipes";
-
 import { RecipeInput } from "@/components/shared/Home/RecipeInput";
 import Testimonials from "@/components/shared/Home/Testimonials";
 
@@ -20,9 +18,6 @@ export default function Home() {
       </SignedOut>
       <SignedIn>
         <RecipeInput />
-        <div className="w-full flex justify-center ">
-          <MyRecipes />
-        </div>
       </SignedIn>
     </>
   );

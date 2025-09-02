@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { fetchRecipeById } from "@/lib/actions/general.action";
-import { RouteParams } from "@/types";
+import { Ingredient, Instruction, RouteParams } from "@/types";
 import {
   ArrowLeft,
   Beef,
@@ -37,9 +37,8 @@ async function page({ params }: RouteParams) {
     ingredients,
     createdAt,
     updatedAt,
-  } = recipe[0];
+  } = recipe;
 
-  console.log(...recipe);
   const fmt = (v: unknown) =>
     v === null || v === undefined || v === "" ? "—" : String(v);
 
@@ -148,7 +147,7 @@ async function page({ params }: RouteParams) {
           </CardHeader>
           <CardContent>
             <ul className="space-y-3">
-              {ingredients.map((ingredient, index) => (
+              {ingredients.map((ingredient: Ingredient, index: number) => (
                 <li key={index} className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
                   <span className="text-sm">
@@ -172,7 +171,7 @@ async function page({ params }: RouteParams) {
           </CardHeader>
           <CardContent>
             <ol className="space-y-4">
-              {instructions.map((instruction) => (
+              {instructions.map((instruction: Instruction) => (
                 <li key={instruction.step} className="flex gap-4">
                   <div className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0">
                     {instruction.step}

@@ -35,3 +35,14 @@ export interface RouteParams {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string>>;
 }
+
+export interface Instruction {
+  step: number | undefined;
+  details: string | undefined;
+}
+
+export interface Ingredient {
+  name: string;
+  quantity: number;
+  unit: string;
+}
