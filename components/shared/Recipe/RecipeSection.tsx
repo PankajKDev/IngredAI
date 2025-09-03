@@ -5,7 +5,6 @@ const RecipeSection: React.FC<RecipeSectionProps> = ({
   title,
   icon,
   recipes,
-
   showViewAll = true,
 }) => {
   return (

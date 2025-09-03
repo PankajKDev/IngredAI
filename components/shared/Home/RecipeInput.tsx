@@ -28,7 +28,7 @@ export function RecipeInput() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const fetchData = await fetch("/api/getrecipe", {
+      const fetchData = await fetch("/api/recipe/getrecipe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,6 +36,7 @@ export function RecipeInput() {
         body: JSON.stringify({ inputState }),
       });
       const data = await fetchData.json();
+
       router.push(`/recipe/${data.recipeId}`);
     } catch (error) {
       console.error(`Failed to fetch recipe:`, error);

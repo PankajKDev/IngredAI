@@ -9,6 +9,22 @@ interface RecipeCardProps {
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const router = useRouter();
+  const favBool = recipe.isFavourite;
+  const handleFavourite = async (id: string) => {
+    try {
+      const likedRecipe = await fetch("/api/recipe/updatefavourite", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, favBool }),
+      });
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700/50 hover:border-purple-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 group">
       <div className="relative h-48 overflow-hidden">
@@ -21,7 +37,10 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
 
         {/* Favorite Button */}
 
-        <button className="absolute top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors">
+        <button
+          onClick={() => handleFavourite(recipe._id!)}
+          className="absolute top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
+        >
           <Heart
             className={`w-4 h-4 ${
               recipe.isFavourite ? "fill-red-500 text-red-500" : "text-white"
