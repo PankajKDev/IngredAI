@@ -12,8 +12,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const favBool = recipe.isFavourite;
   const handleFavourite = async (id: string) => {
     try {
-      const likedRecipe = await fetch("/api/recipe/updatefavourite", {
-        method: "POST",
+      const likedRecipe = await fetch("/api/recipe/getrecipe", {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
