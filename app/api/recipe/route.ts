@@ -142,7 +142,7 @@ JSON Object Structure:
     });
     const savedRecipe = await newRecipe.save();
     const savedRecipeID = savedRecipe._id;
-    return Response.json({ recipeId: savedRecipeID }, { status: 200 });
+    return Response.json({ id: savedRecipeID }, { status: 200 });
   } catch (error) {
     console.log(error);
   }

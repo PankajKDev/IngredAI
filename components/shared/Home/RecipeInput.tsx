@@ -5,12 +5,15 @@ import { PlaceholdersAndVanishInput } from "../../ui/placeholders-and-vanish-inp
 
 import FoodLoading from "@/components/shared/FoodLoading";
 import { useRouter } from "next/navigation";
+import { LoaderFive } from "@/components/ui/loader";
+import { ModeSwitch } from "@/components/ui/ModeSwitch";
 
 export function RecipeInput() {
+  const [mode, setMode] = useState<"recipe" | "workout">("recipe");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [inputState, setInputState] = useState({});
-  const placeholders = [
+  const recipePlaceholders = [
     "Give me a keto-friendly chicken curry recipe",
 
     "How to make a high-protein vegan breakfast burrito?",
@@ -21,6 +24,15 @@ export function RecipeInput() {
     "Dairy-free creamy mushroom soup",
   ];
 
+  const workoutPlaceholders = [
+    "Create a 30-minute full body HIIT workout routine",
+    "Upper body strength training for beginners",
+    "Best stretching routine for post-workout recovery",
+    "Cardio workout  for weight loss goals",
+    "Core strengthening exercises for back pain relief",
+    "Pre-workout warm-up routine for runners",
+  ];
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputState(e.target.value);
   };
@@ -28,16 +40,19 @@ export function RecipeInput() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const fetchData = await fetch("/api/recipe/getrecipe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputState }),
-      });
-      const data = await fetchData.json();
 
-      router.push(`/recipe/${data.recipeId}`);
+      const fetchData = await fetch(
+        `/api/${mode == "recipe" ? "recipe" : "workout"}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ inputState }),
+        }
+      );
+      const data = await fetchData.json();
+      router.push(`/${mode == "recipe" ? "recipe" : "workout"}/${data.id}`);
     } catch (error) {
       console.error(`Failed to fetch recipe:`, error);
     } finally {
@@ -49,15 +64,24 @@ export function RecipeInput() {
       {isLoading ? (
         <>
           <FoodLoading />
-          <h2 className="font-sans text-2xl ">Loading...</h2>
+          <LoaderFive text="Generating recipe..." />
         </>
       ) : (
         <>
-          <h2 className="mb-10 sm:mb-20  text-xl text-center sm:text-5xl  text-orange-500 font-semibold font-sans">
-            Generate Recipe for your dietary needs
+          <h2
+            className={`mb-10 sm:mb-20  text-3xl text-center sm:text-5xl  ${
+              mode == "recipe" ? "text-orange-500" : "text-blue-700"
+            } font-semibold font-sans transition-all duration-300 ease-in-out`}
+          >
+            {mode == "recipe"
+              ? "Generate Recipe for your dietary needs"
+              : "Generate Workout for your fitness needs"}
           </h2>
+          <ModeSwitch mode={mode} onModeChange={setMode} />
           <PlaceholdersAndVanishInput
-            placeholders={placeholders}
+            placeholders={
+              mode == "recipe" ? recipePlaceholders : workoutPlaceholders
+            }
             onChange={handleChange}
             onSubmit={onSubmit}
           />

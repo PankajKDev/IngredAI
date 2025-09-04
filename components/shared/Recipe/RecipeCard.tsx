@@ -12,7 +12,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const favBool = recipe.isFavourite;
   const handleFavourite = async (id: string) => {
     try {
-      const likedRecipe = await fetch("/api/recipe/getrecipe", {
+      const likedRecipe = await fetch("/api/recipe", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
 
         <button
           onClick={() => handleFavourite(recipe._id!)}
-          className="absolute top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
+          className="absolute cursor-pointer top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
         >
           <Heart
             className={`w-4 h-4 ${
