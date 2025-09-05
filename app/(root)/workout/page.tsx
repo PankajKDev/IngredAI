@@ -8,10 +8,10 @@ async function page() {
   const workouts = await fetchWorkoutsByUserId(userId!);
   return (
     <div className="w-full flex items-center flex-col">
-      <div className="w-[95%]">
+      <div className="w-[80%]">
         <WorkoutSection
           title="Recent Workouts"
-          icon={<Flame />}
+          icon={<Flame color="red" />}
           data={workouts}
         />
       </div>
