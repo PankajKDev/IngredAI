@@ -1,6 +1,7 @@
 import Recipe from "@/models/Recipe.schema";
 import connectDB from "../connectDB";
 import { revalidatePath } from "next/cache";
+import Workout from "@/models/Workout.schema";
 
 export async function fetchRecipeById(id: string) {
   await connectDB();
@@ -35,13 +36,22 @@ export async function fetchFavouriteRecipesByUserId(id: string) {
   }
 }
 
-// export async function UpdateFavouriteRecipe(id: string) {
-//   await connectDB();
-//   try {
-//     const updatedRecipe = await Recipe.findById(id);
-//     updatedRecipe.isFavourite = !updatedRecipe.isFavourite;
-//     await updatedRecipe.save();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+export async function fetchWorkoutById(id: string) {
+  await connectDB();
+  try {
+    const fetchedWorkout = await Workout.findOne({ _id: id }).lean();
+    return JSON.parse(JSON.stringify(fetchedWorkout));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchWorkoutsByUserId(id: string) {
+  await connectDB();
+  try {
+    const fetchedRecipes = await Workout.find({ userId: id }).lean();
+    return JSON.parse(JSON.stringify(fetchedRecipes));
+  } catch (error) {
+    console.log(`Error fetching recipes ${error}`);
+  }
+}

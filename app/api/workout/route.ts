@@ -1,4 +1,5 @@
 import connectDB from "@/lib/connectDB";
+import Workout from "@/models/Workout.schema";
 import { google } from "@ai-sdk/google";
 import { auth } from "@clerk/nextjs/server";
 import { generateText } from "ai";
@@ -117,6 +118,7 @@ JSON Object Structure:
   });
   const cleanJSON = text.slice(7, -3);
   const parsedjson = JSON.parse(cleanJSON);
+  console.log(parsedjson);
   const data = parsedjson.workouts[0];
   const result = await serverApi.search.getPhotos({
     query: `${data.image}`,
@@ -129,4 +131,28 @@ JSON Object Structure:
   const imageUrl =
     photo?.urls?.regular ||
     "https://placehold.co/600x400/black/orange?text=Error+fetching+image";
+
+  try {
+    const newWorkout = new Workout({
+      title: data.title,
+      userId: userId,
+      image: imageUrl,
+      description: data.description,
+      type: data.type,
+      totalTime: data.totalTime,
+      difficulty: data.difficulty,
+      caloriesBurned: data.caloriesBurned,
+      targetMuscles: data.targetMuscles,
+      equipment: data.equipment,
+      warmup: data.warmup,
+      workout: data.workout,
+      cooldown: data.cooldown,
+      instructions: data.instructions,
+    });
+    const savedWorkout = await newWorkout.save();
+    const savedWorkoutId = savedWorkout._id;
+    return Response.json({ id: savedWorkoutId }, { status: 200 });
+  } catch (error) {
+    console.log(`Error saving workout :${error}`);
+  }
 }

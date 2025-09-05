@@ -49,3 +49,34 @@ export interface Recipe {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IExercise {
+  name: string;
+  duration: string;
+  reps: string;
+  sets: number;
+  restBetweenSets: string;
+  instructions: string;
+}
+
+export interface ISubWorkout {
+  duration: number;
+  exercises: IExercise[];
+}
+
+export interface IWorkout {
+  _id: string;
+  userId: string;
+  title: string;
+  image: string;
+  description: string;
+  type: string;
+  totalTime: number;
+  difficulty: string;
+  targetMuscles: string[];
+  equipment: string[];
+  caloriesBurned: number;
+  warmup: ISubWorkout;
+  workout: ISubWorkout;
+  cooldown: ISubWorkout;
+}

@@ -7,11 +7,11 @@ const ExerciseSchema = new Schema(
       required: true,
     },
     duration: {
-      type: Number,
+      type: String,
       required: true,
     },
     reps: {
-      type: Number,
+      type: String,
       required: true,
     },
     sets: {
@@ -43,6 +43,10 @@ const SubWorkoutSchema = new Schema(
 
 const WorkoutSchema = new Schema({
   title: {
+    type: String,
+    required: true,
+  },
+  userId: {
     type: String,
     required: true,
   },
@@ -94,3 +98,4 @@ const WorkoutSchema = new Schema({
 });
 
 const Workout = models.Workout || model("Workout", WorkoutSchema);
+export default Workout;
