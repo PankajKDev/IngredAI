@@ -1,27 +1,33 @@
 import { Schema, model, models } from "mongoose";
 
-const InstructionSchema = new Schema({
-  step: {
-    type: Number,
-    required: true,
+const InstructionSchema = new Schema(
+  {
+    step: {
+      type: Number,
+      required: true,
+    },
+    details: {
+      type: String,
+      required: true,
+    },
   },
-  details: {
-    type: String,
-    required: true,
-  },
-});
+  { _id: false }
+);
 
-const IngredientSchema = new Schema({
-  name: {
-    type: String,
+const IngredientSchema = new Schema(
+  {
+    name: {
+      type: String,
+    },
+    quantity: {
+      type: String,
+    },
+    unit: {
+      type: String,
+    },
   },
-  quantity: {
-    type: String,
-  },
-  unit: {
-    type: String,
-  },
-});
+  { _id: false }
+);
 
 const RecipeSchema = new Schema(
   {

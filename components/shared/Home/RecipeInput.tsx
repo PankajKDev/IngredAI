@@ -63,7 +63,7 @@ export function RecipeInput() {
     <div className="h-[30rem] flex flex-col justify-center  items-center px-4">
       {isLoading ? (
         <>
-          <FoodLoading />
+          <FoodLoading mode={mode == "recipe" ? "recipe" : "workout"} />
           <LoaderFive text="Generating recipe..." />
         </>
       ) : (
