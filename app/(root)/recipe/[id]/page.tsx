@@ -1,19 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchRecipeById } from "@/lib/actions/general.action";
+import {
+  DeleteRecipeByID,
+  fetchRecipeById,
+} from "@/lib/actions/general.action";
 import { Ingredient, Instruction, RouteParams } from "@/types";
 import {
   ArrowLeft,
   Beef,
   ChefHat,
   Clock,
+  DeleteIcon,
   Droplets,
   Flame,
+  LucideDelete,
+  Trash2,
   Users,
   Wheat,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import DeleteButton from "@/components/shared/DeleteButton";
+
 async function page({ params }: RouteParams) {
   const { id } = await params;
   const recipe = await fetchRecipeById(id);
@@ -21,6 +29,7 @@ async function page({ params }: RouteParams) {
     redirect("/");
   }
   const {
+    _id,
     title,
     imageUrl,
     username,
@@ -45,13 +54,17 @@ async function page({ params }: RouteParams) {
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Back Button */}
-      <Link
-        href="/recipe"
-        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Recipes
-      </Link>
+      <div className="flex justify-between mb-5">
+        <Link
+          href="/recipe"
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Recipes
+        </Link>
+
+        <DeleteButton id={id} mode="recipe" />
+      </div>
 
       {/* Recipe Header */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
