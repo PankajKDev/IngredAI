@@ -17,12 +17,6 @@ const RecipeSection: React.FC<RecipeSectionProps> = ({
           <h2 className="text-2xl font-bold text-white">{title}</h2>
           <span className="text-gray-400">({recipes.length})</span>
         </div>
-
-        {showViewAll && recipes.length > 6 && (
-          <button className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
-            View All
-          </button>
-        )}
       </div>
 
       {recipes.length > 0 ? (

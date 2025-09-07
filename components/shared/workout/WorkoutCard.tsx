@@ -3,6 +3,7 @@ import type React from "react";
 import type { IWorkout } from "@/types";
 import { Clock, Flame, Dumbbell, LucideDumbbell } from "lucide-react";
 import { useRouter } from "next/navigation";
+import ViewButton from "@/components/ui/ViewButton";
 
 interface WorkoutCardProps {
   workout: IWorkout;
@@ -81,12 +82,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
           )}
         </div>
 
-        <button
-          onClick={() => router.push(`/workout/${workout._id}`)}
-          className="w-full cursor-pointer py-2 px-4 bg-gradient-to-r from-orange-600 to-red-500 text-white font-medium rounded-lg hover:from-orange-700 hover:to-red-600 transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/25"
-        >
-          View Workout
-        </button>
+        <ViewButton id={workout._id} mode="workout" />
       </div>
     </div>
   );

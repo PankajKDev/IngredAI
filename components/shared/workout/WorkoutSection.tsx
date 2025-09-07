@@ -25,12 +25,6 @@ const WorkoutSection: React.FC<WorkoutSectionProps> = ({
           <h2 className="text-2xl font-bold text-white">{title}</h2>
           <span className="text-gray-400">({data.length})</span>
         </div>
-
-        {showViewAll && data.length > 6 && (
-          <button className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
-            View All
-          </button>
-        )}
       </div>
 
       {data.length > 0 ? (

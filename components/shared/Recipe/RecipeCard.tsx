@@ -1,30 +1,14 @@
-"use client";
+import ViewButton from "@/components/ui/ViewButton";
+import { FavouriteRecipeById } from "@/lib/actions/general.action";
 import { Recipe } from "@/types";
 import { Heart, Clock, Users } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 interface RecipeCardProps {
   recipe: Recipe;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
-  const router = useRouter();
-  const favBool = recipe.isFavourite;
-  const handleFavourite = async (id: string) => {
-    try {
-      const likedRecipe = await fetch("/api/recipe", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, favBool }),
-      });
-      router.refresh();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700/50 hover:border-purple-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 group">
       <div className="relative h-48 overflow-hidden">
@@ -36,17 +20,24 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
         {/* Favorite Button */}
-
-        <button
-          onClick={() => handleFavourite(recipe._id!)}
-          className="absolute cursor-pointer top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
-        >
-          <Heart
-            className={`w-4 h-4 ${
-              recipe.isFavourite ? "fill-red-500 text-red-500" : "text-white"
-            }`}
+        <form action={FavouriteRecipeById}>
+          <input type="hidden" name="id" value={recipe._id} />
+          <input
+            name="favBool"
+            type="checkbox"
+            defaultChecked={recipe.isFavourite}
           />
-        </button>
+          <button
+            type="submit"
+            className="absolute cursor-pointer top-3 right-3 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-colors"
+          >
+            <Heart
+              className={`w-4 h-4 ${
+                recipe.isFavourite ? "fill-red-500 text-red-500" : "text-white"
+              }`}
+            />
+          </button>
+        </form>
 
         <div className="absolute top-3 left-3">
           <span
@@ -98,13 +89,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
             <div className="text-xs text-gray-400">Fat</div>
           </div>
         </div>
-
-        <button
-          onClick={() => router.push(`/recipe/${recipe._id}`)}
-          className="w-full cursor-pointer py-2 px-4 bg-gradient-to-r from-purple-600 to-orange-500 text-white font-medium rounded-lg hover:from-purple-700 hover:to-orange-600 transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/25"
-        >
-          View Recipe
-        </button>
+        {/* view button */}
+        <ViewButton mode="recipe" id={recipe._id!} />
       </div>
     </div>
   );

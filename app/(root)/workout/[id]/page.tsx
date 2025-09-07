@@ -1,3 +1,4 @@
+import DeleteButton from "@/components/shared/DeleteButton";
 import { fetchWorkoutById } from "@/lib/actions/general.action";
 import { IExercise, RouteParams } from "@/types";
 import {
@@ -16,13 +17,18 @@ async function page({ params }: RouteParams) {
     <div className="min-h-screen  text-white">
       <div className="container mx-auto px-6 py-12 max-w-5xl">
         <div className="mb-12">
-          <Link
-            href="/workout"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Workouts
-          </Link>
+          <div className="flex justify-between mb-5">
+            <Link
+              href="/workout"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Workouts
+            </Link>
+
+            <DeleteButton id={workoutData._id} mode="workout" />
+          </div>
+
           <div className="relative w-full h-80 mb-8 rounded-2xl overflow-hidden shadow-2xl">
             <img
               src={workoutData.image || "/placeholder.svg"}

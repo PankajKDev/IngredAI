@@ -51,20 +51,45 @@ export async function fetchWorkoutById(id: string) {
 export async function fetchWorkoutsByUserId(id: string) {
   await connectDB();
   try {
-    const fetchedRecipes = await Workout.find({ userId: id }).lean();
+    const fetchedWorkouts = await Workout.find({ userId: id }).lean();
+    return JSON.parse(JSON.stringify(fetchedWorkouts));
   } catch (error) {
     console.log(`Error fetching recipes ${error}`);
   }
 }
 
-export async function DeleteRecipeByID(formData: FormData) {
+export async function DeleteObjectByID(formData: FormData) {
   const id = formData.get("id") as string;
+  const mode = formData.get("mode") as string;
   await connectDB();
   try {
-    const deletedRecipe = await Recipe.deleteOne({ _id: id });
-    revalidatePath(`/recipe`);
+    if (mode == "recipe") {
+      const deletedRecipe = await Recipe.deleteOne({ _id: id });
+      console.log(deletedRecipe);
+    } else {
+      const deletedWorkout = await Workout.deleteOne({ _id: id });
+      console.log(deletedWorkout);
+    }
+    revalidatePath(`/${mode}`);
   } catch (error) {
     console.log(error);
   }
-  redirect("/recipe");
+  redirect(`/${mode}`);
+}
+
+export async function FavouriteRecipeById(formData: FormData) {
+  await connectDB();
+  const id = formData.get("id") as string;
+  const favBool = formData.get("favBool") === "on";
+  try {
+    const favouriteRecipe = await Recipe.updateOne({ _id: id }, [
+      {
+        $set: {
+          isFavourite: !favBool,
+        },
+      },
+    ]);
+  } catch (error) {
+    console.log(`error adding recipe as favourite ${error}`);
+  }
 }
