@@ -1,8 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DeleteRecipeByID,
-  fetchRecipeById,
-} from "@/lib/actions/general.action";
+import { fetchRecipeById } from "@/lib/actions/general.action";
 import { Ingredient, Instruction, RouteParams } from "@/types";
 import {
   ArrowLeft,
@@ -26,7 +23,19 @@ async function page({ params }: RouteParams) {
   const { id } = await params;
   const recipe = await fetchRecipeById(id);
   if (!recipe) {
-    redirect("/");
+    return (
+      <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
+        <h2 className="text-2xl font-sans font-semibold text-red-600">
+          Invalid recipe id
+        </h2>
+        <Link
+          className="border hover:bg-black hover:text-white  h-8 flex justify-center items-center  w-18 rounded-lg bg-white text-black"
+          href="/"
+        >
+          Home
+        </Link>
+      </div>
+    );
   }
   const {
     _id,
