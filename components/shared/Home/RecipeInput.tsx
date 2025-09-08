@@ -55,8 +55,6 @@ export function RecipeInput() {
       router.push(`/${mode == "recipe" ? "recipe" : "workout"}/${data.id}`);
     } catch (error) {
       console.error(`Failed to fetch recipe:`, error);
-    } finally {
-      setIsLoading(false);
     }
   };
   return (
@@ -64,7 +62,6 @@ export function RecipeInput() {
       {isLoading ? (
         <>
           <FoodLoading mode={mode == "recipe" ? "recipe" : "workout"} />
-          <LoaderFive text="Generating recipe..." />
         </>
       ) : (
         <>

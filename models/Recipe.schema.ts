@@ -75,6 +75,11 @@ const RecipeSchema = new Schema(
       type: Boolean,
       required: true,
     },
+    objectCategory: {
+      type: String,
+      required: true,
+      default: "recipe",
+    },
   },
   {
     timestamps: true,

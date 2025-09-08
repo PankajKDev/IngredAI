@@ -95,6 +95,10 @@ const WorkoutSchema = new Schema({
     type: SubWorkoutSchema,
     required: true,
   },
+  objectCategory: {
+    type: String,
+    required: true,
+  },
 });
 
 const Workout = models.Workout || model("Workout", WorkoutSchema);

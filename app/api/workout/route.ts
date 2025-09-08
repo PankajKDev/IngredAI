@@ -29,6 +29,7 @@ JSON Response for Unsafe Inputs:
   "workouts": [
     {
       "title": "The 'Couch Potato' Routine",
+      "category":string(give it a category of "temp")
       "imageUrl": "string (the image name to be searched on unsplash which is funny)",
       "description": "A non-workout for an unsafe request. Best paired with common sense and proper form.",
       "type": "Safety First",
@@ -68,6 +69,7 @@ You must return a single, valid JSON object without any surrounding text or mark
 JSON Object Structure:
 {
   "title": "string (Workout name, e.g., 'Upper Body Strength Builder')",
+  "category":string(give it a category of "workout")
   "image": "string (name of a fitness image to search on Unsplash, e.g., 'home gym workout fitness')",
   "description": "string (A short, motivating one-sentence description of the workout.)",
   "type": "string (Workout category, e.g., 'Strength', 'Cardio', 'HIIT', 'Flexibility')",

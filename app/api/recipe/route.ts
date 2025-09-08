@@ -41,6 +41,7 @@ JSON Response for Unsafe Inputs:
   "recipes": [
     {
       "title": "The 'Nothing' Burger",
+      "category":"string(give it a category of "temp")
       "imageUrl": "string (the image name to be searched on unsplash which is funny)",
       "description": "An inedible dish for an illogical request. Pairs well with a glass of common sense.",
       "cuisine": "Conceptual",
@@ -79,6 +80,7 @@ You must return a single, valid JSON object without any surrounding text or mark
 JSON Object Structure:
 {
   "title": "string",
+  "category":string(give it a category of "recipe")
   "image": "string (name of a food image to search on Unsplash, e.g., 'Spicy Tofu Stir-fry food')",
   "description": "string (A short, enticing one-sentence description of the dish.)",
   "cuisine": "string (Cuisine type, e.g., 'Italian', 'Mexican', 'Asian')",
