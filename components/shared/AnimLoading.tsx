@@ -2,13 +2,12 @@
 import Lottie from "lottie-react";
 import AnimationData from "../../public/anim2.json";
 import AnimationData2 from "../../public/anim3.json";
-import { useAuth } from "@clerk/nextjs";
 import { LoaderFive } from "../ui/loader";
 type Mode = "recipe" | "workout";
-interface FoodLoadingProps {
+interface AnimLoadingProps {
   mode: Mode;
 }
-function FoodLoading({ mode }: FoodLoadingProps) {
+function AnimLoading({ mode }: AnimLoadingProps) {
   return (
     <div className="h-[80vh] w-full flex flex-col justify-center items-center">
       <Lottie
@@ -20,4 +19,4 @@ function FoodLoading({ mode }: FoodLoadingProps) {
   );
 }
 
-export default FoodLoading;
+export default AnimLoading;

@@ -33,8 +33,9 @@ export async function POST(request: Request) {
 
 Before any other action, perform a safety and sanity check on the provided userIngredients list.
 
-1.  **Analyze Ingredients:** Scan the list for any items that are clearly not safe, edible, or logical for cooking (e.g., hazardous materials, illegal substances, or abstract concepts).
-2.  **Handle Unsafe Inputs:** If a single unsafe or illogical ingredient is detected, immediately abort the recipe generation. Return the following exact JSON object without any surrounding text or markdown.
+1.  **Analyze Ingredients:** Scan the list for any items that are clearly not safe, edible, or logical for cooking (e.g., hazardous materials, illegal substances, or abstract concepts(such as plutonium hasbrowns))
+2.   **Direct Request:** If a single safe dish name is provided (e.g., "Sushi", "Pizza", "Chicken Curry"), generate the complete recipe for that specific dish using standard, safe ingredients.
+3.  **Handle Unsafe Inputs:** If a single unsafe or illogical ingredient is detected, immediately abort the recipe generation. Return the following exact JSON object without any surrounding text or markdown.
 
 JSON Response for Unsafe Inputs:
 {
@@ -42,7 +43,6 @@ JSON Response for Unsafe Inputs:
     {
       "title": "The 'Nothing' Burger",
       "category":"string(give it a category of "temp")
-      "imageUrl": "string (the image name to be searched on unsplash which is funny)",
       "description": "An inedible dish for an illogical request. Pairs well with a glass of common sense.",
       "cuisine": "Conceptual",
       "cookTime": 0,
@@ -80,8 +80,7 @@ You must return a single, valid JSON object without any surrounding text or mark
 JSON Object Structure:
 {
   "title": "string",
-  "category":string(give it a category of "recipe")
-  "image": "string (name of a food image to search on Unsplash, e.g., 'Spicy Tofu Stir-fry food')",
+  "category":string(give it a category of "recipe"),
   "description": "string (A short, enticing one-sentence description of the dish.)",
   "cuisine": "string (Cuisine type, e.g., 'Italian', 'Mexican', 'Asian')",
   "cookTime": "number (Estimated total time in minutes, e.g., 30)",
@@ -112,13 +111,16 @@ JSON Object Structure:
   const cleanJSON = text.slice(7, -3);
   const parsedjson = JSON.parse(cleanJSON);
   const data = parsedjson.recipes[0];
-  const result = await serverApi.search.getPhotos({
-    query: `${data.image}`,
+  const unsplashResponse = await serverApi.search.getPhotos({
+    query: `${data.title} ${data.cuisine} food recipe`,
     perPage: 1,
     orderBy: "relevant",
+    orientation: "landscape",
+    contentFilter: "high",
   });
-  const photos = result.response?.results;
 
+  const photos = unsplashResponse.response?.results;
+  console.log(photos);
   const photo = Array.isArray(photos) && photos.length > 0 ? photos[0] : null;
   const imageUrl =
     photo?.urls?.regular ||

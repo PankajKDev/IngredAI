@@ -18,6 +18,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import DeleteButton from "@/components/shared/DeleteButton";
+import { SignedIn } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import Share from "@/components/shared/Share";
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
@@ -57,24 +60,37 @@ async function page({ params }: RouteParams) {
     updatedAt,
   } = recipe;
 
+  const { userId } = await auth();
+  const client = await clerkClient();
+  const sharingUser = await client.users.getUser(recipe.userId);
+
   const fmt = (v: unknown) =>
     v === null || v === undefined || v === "" ? "—" : String(v);
 
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Back Button */}
-      <div className="flex justify-between mb-5">
-        <Link
-          href="/recipe"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Recipes
-        </Link>
-
-        <DeleteButton id={id} mode="recipe" />
-      </div>
-
+      <SignedIn>
+        <div className="flex justify-between mb-5">
+          <Link
+            href="/recipe"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Recipes
+          </Link>
+          {recipe.userId == userId ? (
+            <DeleteButton id={_id} mode="recipe" />
+          ) : (
+            <h1 className="text-muted-foreground font-san hover:text-foreground transition-colors mb-6">
+              Shared by:{" "}
+              <span className="text-white text-md font-sans">
+                {sharingUser.firstName}
+              </span>
+            </h1>
+          )}
+        </div>
+      </SignedIn>
       {/* Recipe Header */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div className="relative overflow-hidden rounded-lg">
@@ -207,6 +223,7 @@ async function page({ params }: RouteParams) {
           </CardContent>
         </Card>
       </div>
+      <Share />
     </main>
   );
 }

@@ -1,6 +1,8 @@
 import DeleteButton from "@/components/shared/DeleteButton";
 import { fetchWorkoutById } from "@/lib/actions/general.action";
 import { IExercise, RouteParams } from "@/types";
+import AnimationData from "@/public/anim2.json";
+import Lottie from "lottie-react";
 import {
   ArrowLeft,
   ClockIcon,
@@ -9,25 +11,58 @@ import {
   TargetIcon,
 } from "lucide-react";
 import Link from "next/link";
+import AnimLoading from "@/components/shared/AnimLoading";
+import { SignedIn } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import Share from "@/components/shared/Share";
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
   const workoutData = await fetchWorkoutById(id);
+  const { userId } = await auth();
+  const client = await clerkClient();
+  const sharingUser = await client.users.getUser(workoutData.userId);
+  if (!workoutData) {
+    return (
+      <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
+        <AnimLoading mode="recipe" />
+        <h2 className="text-2xl font-sans font-semibold text-red-600">
+          Invalid workout id
+        </h2>
+        <Link
+          className="border hover:bg-black hover:text-white  h-8 flex justify-center items-center  w-18 rounded-lg bg-white text-black"
+          href="/"
+        >
+          Home
+        </Link>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen  text-white">
       <div className="container mx-auto px-6 py-12 max-w-5xl">
         <div className="mb-12">
-          <div className="flex justify-between mb-5">
-            <Link
-              href="/workout"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Workouts
-            </Link>
-
-            <DeleteButton id={workoutData._id} mode="workout" />
-          </div>
+          <SignedIn>
+            <div className="flex justify-between mb-5">
+              <Link
+                href="/workout"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Workouts
+              </Link>
+              {workoutData.userId == userId ? (
+                <DeleteButton id={workoutData._id} mode="workout" />
+              ) : (
+                <h1 className="text-muted-foreground font-san hover:text-foreground transition-colors mb-6">
+                  Shared by:{" "}
+                  <span className="text-white text-md font-sans">
+                    {sharingUser.firstName}
+                  </span>
+                </h1>
+              )}
+            </div>
+          </SignedIn>
 
           <div className="relative w-full h-80 mb-8 rounded-2xl overflow-hidden shadow-2xl">
             <img
@@ -311,6 +346,7 @@ async function page({ params }: RouteParams) {
           </p>
         </div>
       </div>
+      <Share />
     </div>
   );
 }

@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { PlaceholdersAndVanishInput } from "../../ui/placeholders-and-vanish-input";
 
-import FoodLoading from "@/components/shared/FoodLoading";
+import AnimLoading from "@/components/shared/AnimLoading";
 import { useRouter } from "next/navigation";
-import { LoaderFive } from "@/components/ui/loader";
 import { ModeSwitch } from "@/components/ui/ModeSwitch";
 
 export function RecipeInput() {
@@ -61,7 +60,7 @@ export function RecipeInput() {
     <div className="h-[30rem] flex flex-col justify-center  items-center px-4">
       {isLoading ? (
         <>
-          <FoodLoading mode={mode == "recipe" ? "recipe" : "workout"} />
+          <AnimLoading mode={mode == "recipe" ? "recipe" : "workout"} />
         </>
       ) : (
         <>

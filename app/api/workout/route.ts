@@ -150,6 +150,7 @@ JSON Object Structure:
       workout: data.workout,
       cooldown: data.cooldown,
       instructions: data.instructions,
+      objectCategory: data.category,
     });
     const savedWorkout = await newWorkout.save();
     const savedWorkoutId = savedWorkout._id;

@@ -1,9 +1,9 @@
-import FoodLoading from "@/components/shared/FoodLoading";
+import AnimLoading from "@/components/shared/AnimLoading";
 
 function Loading() {
   return (
     <>
-      <FoodLoading mode="recipe" />
+      <AnimLoading mode="recipe" />
     </>
   );
 }
