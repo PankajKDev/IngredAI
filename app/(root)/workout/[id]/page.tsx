@@ -15,6 +15,25 @@ import AnimLoading from "@/components/shared/AnimLoading";
 import { SignedIn } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Share from "@/components/shared/Share";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+  const workout = await fetchWorkoutById(id);
+  return {
+    title: `${workout.title} - IngredAI`,
+    description:
+      workout.description ||
+      `easy workout to make ${workout.name} with IngredAI`,
+    openGraph: {
+      title: workout.title,
+      description: workout.description,
+      images: workout.imageUrl,
+    },
+  };
+}
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
@@ -25,7 +44,7 @@ async function page({ params }: RouteParams) {
   if (!workoutData) {
     return (
       <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
-        <AnimLoading mode="recipe" />
+        <AnimLoading mode="workout" />
         <h2 className="text-2xl font-sans font-semibold text-red-600">
           Invalid workout id
         </h2>

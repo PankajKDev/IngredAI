@@ -21,6 +21,24 @@ import DeleteButton from "@/components/shared/DeleteButton";
 import { SignedIn } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Share from "@/components/shared/Share";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+  const recipe = await fetchRecipeById(id);
+  return {
+    title: `${recipe.title} - IngredAI`,
+    description:
+      recipe.description || `easy recipe to make ${recipe.name} with IngredAI`,
+    openGraph: {
+      title: recipe.title,
+      description: recipe.description,
+      images: recipe.imageUrl,
+    },
+  };
+}
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
