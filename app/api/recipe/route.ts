@@ -10,12 +10,7 @@ const serverApi = createApi({
 });
 
 export async function GET() {
-  // const { sessionId } = await auth();
-  //to access token temporarily
-  //const client = await clerkClient();
-  //const token = await client.sessions.getToken(sessionId);
-  //return Response.json({ token });
-  //return Response.json({ success: true }, { status: 200 });
+  return Response.json({ success: true }, { status: 200 });
 }
 
 export async function POST(request: Request) {

@@ -22,7 +22,6 @@ const navigationItems = [
   { name: "Home", href: "/", icon: Home },
   { name: "Recipe", href: "/recipe", icon: BookOpen },
   { name: "Workout", href: "/workout", icon: Dumbbell },
-  { name: "Pricing", href: "/pricing", icon: CreditCard },
 ];
 
 export function MobileNavigation() {

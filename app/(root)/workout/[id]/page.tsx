@@ -24,9 +24,7 @@ export async function generateMetadata({
   const workout = await fetchWorkoutById(id);
   return {
     title: `${workout.title} - IngredAI`,
-    description:
-      workout.description ||
-      `easy workout to make ${workout.name} with IngredAI`,
+    description: workout.description || `${workout.name} with IngredAI`,
     openGraph: {
       title: workout.title,
       description: workout.description,
@@ -356,16 +354,9 @@ async function page({ params }: RouteParams) {
         </div>
 
         <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
-          <h2 className="text-lg font-bold text-white mb-2">
-            Additional Properties
-          </h2>
-          <p className="text-gray-400">
-            Version:{" "}
-            <span className="text-blue-400 font-mono">{workoutData.__v}</span>
-          </p>
+          <Share />
         </div>
       </div>
-      <Share />
     </div>
   );
 }

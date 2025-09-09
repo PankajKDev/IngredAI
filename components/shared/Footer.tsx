@@ -11,7 +11,7 @@ function Footer() {
         <h3 className="font-sans">Your diet and body goals all covered</h3>
       </div>
       <div className="w-full flex gap-10 justify-center">
-        <div className="flex flex-col text-sm text-gray-600">
+        <div className="flex flex-col  text-sm text-gray-600">
           <SignedIn>
             {navLinks.map((item) => (
               <Link key={item.name} href={item.linkname}>
@@ -26,11 +26,6 @@ function Footer() {
               </Link>
             ))}
           </SignedOut>
-        </div>
-
-        <div className="flex flex-col text-sm text-gray-600">
-          <p>Privacy policy</p>
-          <p>Refund policy</p>
         </div>
       </div>
       <h2 className="w-full  h-5 text-sm text-center ">

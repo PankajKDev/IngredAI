@@ -13,7 +13,7 @@ export default function Home() {
       <SignedOut>
         <HeroSectionOne />
         <HowItWorks />
-        <Testimonials />
+
         <CallToAction />
       </SignedOut>
       <SignedIn>

@@ -17,7 +17,7 @@ export function HeroSectionOne() {
       </div>
       <div className="px-4 py-10 md:py-20">
         <h1 className="relative z-10 mx-auto max-w-4xl text-center text-2xl font-bold text-slate-700 md:text-4xl lg:text-7xl dark:text-slate-300">
-          {"Eating Healthy should not be complicated"
+          {"Planning meals / workout should not be complicated"
             .split(" ")
             .map((word, index) => (
               <motion.span
@@ -48,8 +48,8 @@ export function HeroSectionOne() {
           }}
           className="relative z-10 mx-auto max-w-xl py-4 text-center text-lg font-normal text-neutral-600 dark:text-neutral-400"
         >
-          With IngredAI,Achieve your healthy eating goals without affecting
-          taste and losing fat together to attain your dream body
+          IngredAI helps you create personalized workouts and delicious
+          recipes—fuel your fitness and health goals with ease.
         </motion.p>
         <motion.div
           initial={{
