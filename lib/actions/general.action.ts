@@ -89,8 +89,8 @@ export async function FavouriteRecipeById(formData: FormData) {
         },
       },
     ]);
+    revalidatePath("/recipe");
   } catch (error) {
     console.log(`error adding recipe as favourite ${error}`);
   }
-  revalidatePath(`/recipe`);
 }
