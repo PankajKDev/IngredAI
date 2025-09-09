@@ -1,12 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-
-interface ModeSwitchProps {
-  mode: "recipe" | "workout";
-  onModeChange: (mode: "recipe" | "workout") => void;
-  className?: string;
-}
+import { ModeSwitchProps } from "@/types";
 
 export function ModeSwitch({ mode, onModeChange, className }: ModeSwitchProps) {
   return (

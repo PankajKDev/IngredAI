@@ -7,6 +7,13 @@ export interface IPricingData {
   features: Features[];
 }
 
+export interface WorkoutSectionProps {
+  title: string;
+  icon: React.ReactNode;
+  data: IWorkout[];
+  showViewAll?: boolean;
+}
+
 export interface RecipeSectionProps {
   title: string;
   icon: React.ReactNode;
@@ -79,4 +86,10 @@ export interface IWorkout {
   warmup: ISubWorkout;
   workout: ISubWorkout;
   cooldown: ISubWorkout;
+}
+
+export interface ModeSwitchProps {
+  mode: "recipe" | "workout";
+  onModeChange: (mode: "recipe" | "workout") => void;
+  className?: string;
 }

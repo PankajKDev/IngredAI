@@ -1,13 +1,6 @@
 import type React from "react";
-import type { IWorkout } from "@/types";
+import type { WorkoutSectionProps } from "@/types";
 import WorkoutCard from "./WorkoutCard";
-
-interface WorkoutSectionProps {
-  title: string;
-  icon: React.ReactNode;
-  data: IWorkout[];
-  showViewAll?: boolean;
-}
 
 const WorkoutSection: React.FC<WorkoutSectionProps> = ({
   title,
