@@ -1,8 +1,5 @@
 import DeleteButton from "@/components/shared/DeleteButton";
-import { fetchWorkoutById } from "@/lib/actions/general.action";
-import { IExercise, RouteParams } from "@/types";
-import AnimationData from "@/public/anim2.json";
-import Lottie from "lottie-react";
+import { IExercise, IWorkout, RouteParams } from "@/types";
 import {
   ArrowLeft,
   ClockIcon,
@@ -21,7 +18,12 @@ export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
   const { id } = await params;
-  const workout = await fetchWorkoutById(id);
+  const response = await fetch(
+    `${process.env.NEXT_BASE_URL}/api/workout/${id}`
+  );
+
+  const workout = await response.json();
+
   return {
     title: `${workout.title} - IngredAI`,
     description: workout.description || `${workout.name} with IngredAI`,
@@ -35,11 +37,31 @@ export async function generateMetadata({
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
-  const workoutData = await fetchWorkoutById(id);
-  const { userId } = await auth();
+  const response = await fetch(
+    `${process.env.NEXT_BASE_URL}/api/workout/${id}`
+  );
+
+  const fetchedWorkout = await response.json();
+  const {
+    _id,
+    userId,
+    title,
+    image,
+    description,
+    type,
+    totalTime,
+    difficulty,
+    targetMuscles,
+    equipment,
+    caloriesBurned,
+    warmup,
+    workout,
+    cooldown,
+  } = fetchedWorkout;
+  const { userId: sharedUserId } = await auth();
   const client = await clerkClient();
-  const sharingUser = await client.users.getUser(workoutData.userId);
-  if (!workoutData) {
+  const sharingUser = await client.users.getUser(sharedUserId!);
+  if (!response.ok) {
     return (
       <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
         <AnimLoading mode="workout" />
@@ -68,8 +90,8 @@ async function page({ params }: RouteParams) {
                 <ArrowLeft className="w-4 h-4" />
                 Back to Workouts
               </Link>
-              {workoutData.userId == userId ? (
-                <DeleteButton id={workoutData._id} mode="workout" />
+              {userId == userId ? (
+                <DeleteButton id={_id} mode="workout" />
               ) : (
                 <h1 className="text-muted-foreground font-san hover:text-foreground transition-colors mb-6">
                   Shared by:{" "}
@@ -83,14 +105,14 @@ async function page({ params }: RouteParams) {
 
           <div className="relative w-full h-80 mb-8 rounded-2xl overflow-hidden shadow-2xl">
             <img
-              src={workoutData.image || "/placeholder.svg"}
-              alt={workoutData.title}
+              src={image || "/placeholder.svg"}
+              alt={title}
               className=" object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6">
               <h1 className="text-5xl font-bold text-balance leading-tight">
-                {workoutData.title}
+                {title}
               </h1>
             </div>
           </div>
@@ -100,7 +122,7 @@ async function page({ params }: RouteParams) {
               Workout <span className="text-blue-400">for your needs</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto text-pretty leading-relaxed">
-              {workoutData.description}
+              {description}
             </p>
           </div>
 
@@ -115,7 +137,7 @@ async function page({ params }: RouteParams) {
                     Total Time
                   </p>
                   <p className="text-xl font-bold text-white">
-                    {workoutData.totalTime} min
+                    {totalTime} min
                   </p>
                 </div>
               </div>
@@ -130,9 +152,7 @@ async function page({ params }: RouteParams) {
                   <p className="text-sm text-gray-400 font-medium">
                     Difficulty
                   </p>
-                  <p className="text-xl font-bold text-white">
-                    {workoutData.difficulty}
-                  </p>
+                  <p className="text-xl font-bold text-white">{difficulty}</p>
                 </div>
               </div>
             </div>
@@ -144,9 +164,7 @@ async function page({ params }: RouteParams) {
                 </div>
                 <div>
                   <p className="text-sm text-gray-400 font-medium">Type</p>
-                  <p className="text-xl font-bold text-white">
-                    {workoutData.type}
-                  </p>
+                  <p className="text-xl font-bold text-white">{type}</p>
                 </div>
               </div>
             </div>
@@ -159,7 +177,7 @@ async function page({ params }: RouteParams) {
                 <div>
                   <p className="text-sm text-gray-400 font-medium">Calories</p>
                   <p className="text-xl font-bold text-white">
-                    {workoutData.caloriesBurned}
+                    {caloriesBurned}
                   </p>
                 </div>
               </div>
@@ -171,16 +189,14 @@ async function page({ params }: RouteParams) {
               Target Muscles
             </h3>
             <div className="flex flex-wrap gap-3">
-              {workoutData.targetMuscles.map(
-                (muscle: string, index: number) => (
-                  <span
-                    key={index}
-                    className="bg-gradient-to-r from-slate-700 to-slate-800 text-gray-200 px-4 py-2 rounded-full text-sm font-medium border border-slate-600"
-                  >
-                    {muscle}
-                  </span>
-                )
-              )}
+              {targetMuscles.map((muscle: string, index: number) => (
+                <span
+                  key={index}
+                  className="bg-gradient-to-r from-slate-700 to-slate-800 text-gray-200 px-4 py-2 rounded-full text-sm font-medium border border-slate-600"
+                >
+                  {muscle}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -189,7 +205,7 @@ async function page({ params }: RouteParams) {
               Equipment Needed
             </h3>
             <div className="flex flex-wrap gap-3">
-              {workoutData.equipment.map((item: string, index: number) => (
+              {equipment.map((item: string, index: number) => (
                 <span
                   key={index}
                   className="border-2 border-blue-400 text-white px-4 py-2 rounded-full text-sm font-medium bg-blue-600/80 hover:bg-blue-600 transition-colors"
@@ -206,7 +222,7 @@ async function page({ params }: RouteParams) {
             <h2 className="text-2xl font-bold text-white flex items-center gap-3 mb-2">
               🔥 Warmup
               <span className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                {workoutData.warmup.duration} min
+                {warmup.duration} min
               </span>
             </h2>
             <p className="text-gray-400">
@@ -214,39 +230,37 @@ async function page({ params }: RouteParams) {
             </p>
           </div>
           <div className="space-y-4">
-            {workoutData.warmup.exercises.map(
-              (exercise: IExercise, index: number) => (
-                <div
-                  key={index}
-                  className="bg-slate-700/50 rounded-xl p-6 border border-slate-600"
-                >
-                  <h3 className="text-xl font-semibold text-white mb-3">
-                    {exercise.name}
-                  </h3>
-                  <div className="flex flex-wrap gap-3 text-sm text-gray-300 mb-4">
-                    {exercise.duration !== "N/A" && (
-                      <span className="flex items-center gap-2 bg-slate-600 px-3 py-1 rounded-full">
-                        <ClockIcon />
-                        {exercise.duration}
-                      </span>
-                    )}
-                    {exercise.reps !== "N/A" && (
-                      <span className="bg-slate-600 px-3 py-1 rounded-full">
-                        {exercise.reps}
-                      </span>
-                    )}
-                    {exercise.sets && (
-                      <span className="bg-slate-600 px-3 py-1 rounded-full">
-                        {exercise.sets} sets
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-gray-300 leading-relaxed">
-                    {exercise.instructions}
-                  </p>
+            {warmup.exercises.map((exercise: IExercise, index: number) => (
+              <div
+                key={index}
+                className="bg-slate-700/50 rounded-xl p-6 border border-slate-600"
+              >
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {exercise.name}
+                </h3>
+                <div className="flex flex-wrap gap-3 text-sm text-gray-300 mb-4">
+                  {exercise.duration !== "N/A" && (
+                    <span className="flex items-center gap-2 bg-slate-600 px-3 py-1 rounded-full">
+                      <ClockIcon />
+                      {exercise.duration}
+                    </span>
+                  )}
+                  {exercise.reps !== "N/A" && (
+                    <span className="bg-slate-600 px-3 py-1 rounded-full">
+                      {exercise.reps}
+                    </span>
+                  )}
+                  {exercise.sets && (
+                    <span className="bg-slate-600 px-3 py-1 rounded-full">
+                      {exercise.sets} sets
+                    </span>
+                  )}
                 </div>
-              )
-            )}
+                <p className="text-gray-300 leading-relaxed">
+                  {exercise.instructions}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -255,7 +269,7 @@ async function page({ params }: RouteParams) {
             <h2 className="text-2xl font-bold text-white flex items-center gap-3 mb-2">
               💪 Main Workout
               <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                {workoutData.workout.duration} min
+                {workout.duration} min
               </span>
             </h2>
             <p className="text-gray-400">
@@ -263,44 +277,42 @@ async function page({ params }: RouteParams) {
             </p>
           </div>
           <div className="space-y-4">
-            {workoutData.workout.exercises.map(
-              (exercise: IExercise, index: number) => (
-                <div
-                  key={index}
-                  className="bg-slate-700/50 rounded-xl p-6 border border-slate-600"
-                >
-                  <h3 className="text-xl font-semibold text-white mb-3">
-                    {exercise.name}
-                  </h3>
-                  <div className="flex flex-wrap gap-3 text-sm text-gray-300 mb-4">
-                    {exercise.duration !== "N/A" && (
-                      <span className="flex items-center gap-2 bg-slate-600 px-3 py-1 rounded-full">
-                        <ClockIcon />
-                        {exercise.duration}
-                      </span>
-                    )}
-                    {exercise.reps !== "N/A" && (
-                      <span className="bg-slate-600 px-3 py-1 rounded-full">
-                        {exercise.reps}
-                      </span>
-                    )}
-                    {exercise.sets && (
-                      <span className="bg-slate-600 px-3 py-1 rounded-full">
-                        {exercise.sets} sets
-                      </span>
-                    )}
-                    {exercise.restBetweenSets && (
-                      <span className="bg-blue-600 px-3 py-1 rounded-full">
-                        Rest: {exercise.restBetweenSets}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-gray-300 leading-relaxed">
-                    {exercise.instructions}
-                  </p>
+            {workout.exercises.map((exercise: IExercise, index: number) => (
+              <div
+                key={index}
+                className="bg-slate-700/50 rounded-xl p-6 border border-slate-600"
+              >
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {exercise.name}
+                </h3>
+                <div className="flex flex-wrap gap-3 text-sm text-gray-300 mb-4">
+                  {exercise.duration !== "N/A" && (
+                    <span className="flex items-center gap-2 bg-slate-600 px-3 py-1 rounded-full">
+                      <ClockIcon />
+                      {exercise.duration}
+                    </span>
+                  )}
+                  {exercise.reps !== "N/A" && (
+                    <span className="bg-slate-600 px-3 py-1 rounded-full">
+                      {exercise.reps}
+                    </span>
+                  )}
+                  {exercise.sets && (
+                    <span className="bg-slate-600 px-3 py-1 rounded-full">
+                      {exercise.sets} sets
+                    </span>
+                  )}
+                  {exercise.restBetweenSets && (
+                    <span className="bg-blue-600 px-3 py-1 rounded-full">
+                      Rest: {exercise.restBetweenSets}
+                    </span>
+                  )}
                 </div>
-              )
-            )}
+                <p className="text-gray-300 leading-relaxed">
+                  {exercise.instructions}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -309,7 +321,7 @@ async function page({ params }: RouteParams) {
             <h2 className="text-2xl font-bold text-white flex items-center gap-3 mb-2">
               🧘 Cooldown
               <span className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                {workoutData.cooldown.duration} min
+                {cooldown.duration} min
               </span>
             </h2>
             <p className="text-gray-400">
@@ -317,39 +329,37 @@ async function page({ params }: RouteParams) {
             </p>
           </div>
           <div className="space-y-4">
-            {workoutData.cooldown.exercises.map(
-              (exercise: IExercise, index: number) => (
-                <div
-                  key={index}
-                  className="bg-slate-700/50 rounded-xl p-6 border border-slate-600"
-                >
-                  <h3 className="text-xl font-semibold text-white mb-3">
-                    {exercise.name}
-                  </h3>
-                  <div className="flex flex-wrap gap-3 text-sm text-gray-300 mb-4">
-                    {exercise.duration !== "N/A" && (
-                      <span className="flex items-center gap-2 bg-slate-600 px-3 py-1 rounded-full">
-                        <ClockIcon />
-                        {exercise.duration}
-                      </span>
-                    )}
-                    {exercise.reps !== "N/A" && (
-                      <span className="bg-slate-600 px-3 py-1 rounded-full">
-                        {exercise.reps}
-                      </span>
-                    )}
-                    {exercise.sets && (
-                      <span className="bg-slate-600 px-3 py-1 rounded-full">
-                        {exercise.sets} sets
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-gray-300 leading-relaxed">
-                    {exercise.instructions}
-                  </p>
+            {cooldown.exercises.map((exercise: IExercise, index: number) => (
+              <div
+                key={index}
+                className="bg-slate-700/50 rounded-xl p-6 border border-slate-600"
+              >
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {exercise.name}
+                </h3>
+                <div className="flex flex-wrap gap-3 text-sm text-gray-300 mb-4">
+                  {exercise.duration !== "N/A" && (
+                    <span className="flex items-center gap-2 bg-slate-600 px-3 py-1 rounded-full">
+                      <ClockIcon />
+                      {exercise.duration}
+                    </span>
+                  )}
+                  {exercise.reps !== "N/A" && (
+                    <span className="bg-slate-600 px-3 py-1 rounded-full">
+                      {exercise.reps}
+                    </span>
+                  )}
+                  {exercise.sets && (
+                    <span className="bg-slate-600 px-3 py-1 rounded-full">
+                      {exercise.sets} sets
+                    </span>
+                  )}
                 </div>
-              )
-            )}
+                <p className="text-gray-300 leading-relaxed">
+                  {exercise.instructions}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 

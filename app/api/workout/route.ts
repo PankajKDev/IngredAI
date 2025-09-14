@@ -159,3 +159,16 @@ JSON Object Structure:
     console.log(`Error saving workout :${error}`);
   }
 }
+
+export async function GET(req: Request) {
+  await connectDB();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("userId");
+
+  try {
+    const fetchedWorkouts = await Workout.find({ userId: id }).lean();
+    return Response.json({ fetchedWorkouts });
+  } catch (error) {
+    console.log(`Error fetching recipes ${error}`);
+  }
+}

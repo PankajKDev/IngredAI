@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   await connectDB();
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
-  console.log(userId);
+
   try {
     const recipes: IRecipe[] = await Recipe.find({ userId: userId }).lean();
     const favouriteRecipes: IRecipe[] = recipes.filter(
