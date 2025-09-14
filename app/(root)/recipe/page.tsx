@@ -1,21 +1,28 @@
 import React from "react";
 import { Heart, Clock, ChefHat } from "lucide-react";
 import RecipeSection from "@/components/shared/Recipe/RecipeSection";
-import {
-  fetchFavouriteRecipesByUserId,
-  fetchRecipesByUserId,
-} from "@/lib/actions/general.action";
-
 import { auth } from "@clerk/nextjs/server";
 
 const RecipePage: React.FC = async () => {
   const { userId } = await auth();
+  const response = await fetch(
+    `${process.env.NEXT_BASE_URL}/api/recipe?userId=${userId}`
+  );
+  if (!response.ok) {
+    return (
+      <div className="min-h-[80vh] w-full flex justify-center items-center">
+        <h1 className="text-3xl font-sans text-red-600">
+          Error Fetching Recipes
+        </h1>
+      </div>
+    );
+  }
+  const data = await response.json();
 
-  const recipes = await fetchRecipesByUserId(userId!);
-  const favouriteRecipes = await fetchFavouriteRecipesByUserId(userId!);
+  const { recipes, favouriteRecipes } = data.data;
+
   return (
-    <div className=" ">
-      {/* Header */}
+    <div>
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex items-center gap-4 mb-2">
@@ -30,9 +37,7 @@ const RecipePage: React.FC = async () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Favorite Recipes */}
         <RecipeSection
           title="Favorite Recipes"
           icon={<Heart className="w-5 h-5 text-red-400" />}

@@ -1,3 +1,10 @@
+export interface ApiResponse {
+  success: boolean;
+  data: {
+    recipes?: IRecipe[];
+    favouriteRecipes?: IRecipe[];
+  };
+}
 export interface Features {
   feature: string;
   present: boolean;
@@ -17,8 +24,7 @@ export interface WorkoutSectionProps {
 export interface RecipeSectionProps {
   title: string;
   icon: React.ReactNode;
-  recipes: Recipe[];
-  showViewAll?: boolean;
+  recipes: IRecipe[];
 }
 
 export interface RouteParams {
@@ -36,7 +42,7 @@ export interface Ingredient {
   quantity: number;
   unit: string;
 }
-export interface Recipe {
+export interface IRecipe {
   _id?: string;
   title: string;
   userId: string;

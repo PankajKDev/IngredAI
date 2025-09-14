@@ -15,7 +15,6 @@ import {
   Wheat,
 } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import DeleteButton from "@/components/shared/DeleteButton";
 import { SignedIn } from "@clerk/nextjs";
@@ -27,7 +26,8 @@ export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
   const { id } = await params;
-  const recipe = await fetchRecipeById(id);
+  const response = await fetch(`${process.env.NEXT_BASE_URL}/api/recipe/${id}`);
+  const recipe = await response.json();
   return {
     title: `${recipe.title} - IngredAI`,
     description:
@@ -42,7 +42,18 @@ export async function generateMetadata({
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
-  const recipe = await fetchRecipeById(id);
+  const response = await fetch(`${process.env.NEXT_BASE_URL}/api/recipe/${id}`);
+  if (!response.ok) {
+    return (
+      <div className="min-h-[80vh] w-full flex justify-center items-center">
+        <h1 className="text-3xl font-sans text-red-600">
+          Error Fetching Recipe
+        </h1>
+      </div>
+    );
+  }
+  const recipe = await response.json();
+  console.log(recipe);
   if (!recipe) {
     return (
       <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
@@ -62,7 +73,6 @@ async function page({ params }: RouteParams) {
     _id,
     title,
     imageUrl,
-    username,
     description,
     cuisine,
     cookTime,
@@ -74,9 +84,7 @@ async function page({ params }: RouteParams) {
     difficulty,
     instructions,
     ingredients,
-    createdAt,
-    updatedAt,
-  } = recipe;
+  } = await recipe;
 
   const { userId } = await auth();
   const client = await clerkClient();
@@ -87,7 +95,6 @@ async function page({ params }: RouteParams) {
 
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Back Button */}
       <SignedIn>
         <div className="flex justify-between mb-5">
           <Link
@@ -220,7 +227,6 @@ async function page({ params }: RouteParams) {
           </CardContent>
         </Card>
 
-        {/* Instructions */}
         <Card className="bg-card border-border">
           <CardHeader>
             <CardTitle className="text-xl">Instructions</CardTitle>

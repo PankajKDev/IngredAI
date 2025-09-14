@@ -1,7 +1,8 @@
 import connectDB from "@/lib/connectDB";
 import Recipe from "@/models/Recipe.schema";
+import { IRecipe } from "@/types";
 import { google } from "@ai-sdk/google";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { generateText } from "ai";
 import { createApi } from "unsplash-js";
 
@@ -9,8 +10,27 @@ const serverApi = createApi({
   accessKey: process.env.UNSPLASH_ACCESS_KEY!,
 });
 
-export async function GET() {
-  return Response.json({ success: true }, { status: 200 });
+export async function GET(req: Request) {
+  await connectDB();
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
+  console.log(userId);
+  try {
+    const recipes: IRecipe[] = await Recipe.find({ userId: userId }).lean();
+    const favouriteRecipes: IRecipe[] = recipes.filter(
+      (recipe) => recipe.isFavourite === true
+    );
+
+    return Response.json({
+      success: true,
+      data: {
+        recipes: recipes,
+        favouriteRecipes: favouriteRecipes,
+      },
+    });
+  } catch (error) {
+    console.log(`error :`, error);
+  }
 }
 
 export async function POST(request: Request) {

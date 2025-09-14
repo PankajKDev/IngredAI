@@ -1,4 +1,5 @@
-import { Schema, model, models } from "mongoose";
+import { IRecipe } from "@/types";
+import { Model, Schema, model, models } from "mongoose";
 
 const InstructionSchema = new Schema(
   {
@@ -86,6 +87,6 @@ const RecipeSchema = new Schema(
   }
 );
 
-const Recipe = models.Recipe || model("Recipe", RecipeSchema);
+const Recipe: Model<IRecipe> = models.Recipe || model("Recipe", RecipeSchema);
 
 export default Recipe;

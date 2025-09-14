@@ -1,11 +1,11 @@
 import ViewButton from "@/components/ui/ViewButton";
 import { FavouriteRecipeById } from "@/lib/actions/general.action";
-import { Recipe } from "@/types";
+import { IRecipe } from "@/types";
 import { Heart, Clock, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 
 interface RecipeCardProps {
-  recipe: Recipe;
+  recipe: IRecipe;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
