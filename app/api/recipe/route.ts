@@ -39,7 +39,8 @@ export async function POST(request: Request) {
   const { inputState } = await request.json();
   console.log(inputState);
   const { text } = await generateText({
-    model: google("gemini-2.0-flash-exp"),
+    model: google("gemini-2.5-flash-lite"),
+    maxRetries: 0,
     prompt: `
     You are an expert culinary AI assistant named "IngredAI". Your primary goal is to provide a single, safe, delicious, and easy-to-follow recipe. You must strictly follow the directives below.
 
@@ -123,9 +124,17 @@ JSON Object Structure:
     `,
   });
   console.log(text);
-  const cleanJSON = text.slice(7, -3);
+
+  function extractJSON(text: string) {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON found in AI response");
+    return match[0];
+  }
+
+  const cleanJSON = extractJSON(text);
   const parsedjson = JSON.parse(cleanJSON);
-  const data = parsedjson.recipes[0];
+  const data = parsedjson.recipes ? parsedjson.recipes[0] : parsedjson;
+
   const unsplashResponse = await serverApi.search.getPhotos({
     query: `${data.title} ${data.cuisine} food recipe`,
     perPage: 1,
@@ -164,5 +173,6 @@ JSON Object Structure:
     return Response.json({ id: savedRecipeID }, { status: 200 });
   } catch (error) {
     console.log(error);
+    return Response.json({ success: false }, { status: 500 });
   }
 }
