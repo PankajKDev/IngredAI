@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchRecipeById } from "@/lib/actions/general.action";
 import { Ingredient, Instruction, RouteParams } from "@/types";
 import {
   ArrowLeft,
