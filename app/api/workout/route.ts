@@ -119,10 +119,16 @@ JSON Object Structure:
 }
     `,
   });
-  const cleanJSON = text.slice(7, -3);
+  function extractJSON(text: string) {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON found in AI response");
+    return match[0];
+  }
+
+  const cleanJSON = extractJSON(text);
   const parsedjson = JSON.parse(cleanJSON);
-  console.log(parsedjson);
-  const data = parsedjson.workouts[0];
+  const data = parsedjson.recipes ? parsedjson.recipes[0] : parsedjson;
+
   const result = await serverApi.search.getPhotos({
     query: `${data.image}`,
     perPage: 1,
