@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   try {
     const recipes: IRecipe[] = await Recipe.find({ userId: userId }).lean();
     const favouriteRecipes: IRecipe[] = recipes.filter(
-      (recipe) => recipe.isFavourite === true
+      (recipe) => recipe.isFavourite === true,
     );
 
     return Response.json({
@@ -39,8 +39,8 @@ export async function POST(request: Request) {
   const { inputState } = await request.json();
   console.log(inputState);
   const { text } = await generateText({
-    model: google("gemini-2.5-flash-lite"),
-    maxRetries: 0,
+    model: google(`${process.env.GEMINI_MODEL}`),
+    maxRetries: 3,
     prompt: `
     You are an expert culinary AI assistant named "IngredAI". Your primary goal is to provide a single, safe, delicious, and easy-to-follow recipe. You must strictly follow the directives below.
 

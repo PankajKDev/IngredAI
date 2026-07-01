@@ -11,6 +11,6 @@ export async function GET(req: Request, { params }: RouteParams) {
     const fetchedRecipe = await Recipe.findOne({ _id: id }).lean();
     return Response.json({ ...fetchedRecipe }, { status: 200 });
   } catch (error) {
-    console.log("Error :", error);
+    return Response.json({ error }, { status: 400 });
   }
 }

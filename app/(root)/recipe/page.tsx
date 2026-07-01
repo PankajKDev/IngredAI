@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs/server";
 const RecipePage: React.FC = async () => {
   const { userId } = await auth();
   const response = await fetch(
-    `${process.env.NEXT_BASE_URL}/api/recipe?userId=${userId}`
+    `${process.env.NEXT_BASE_URL}/api/recipe?userId=${userId}`,
   );
   if (!response.ok) {
     return (
@@ -26,7 +26,7 @@ const RecipePage: React.FC = async () => {
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex items-center gap-4 mb-2">
-            <div className="p-3 rounded-xl bg-gradient-to-br from-purple-600 to-orange-500">
+            <div className="p-3 rounded-xl bg-linear-to-br from-purple-600 to-orange-500">
               <ChefHat className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-white">My Recipes</h1>

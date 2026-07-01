@@ -14,8 +14,8 @@ export async function POST(request: Request) {
   const { userId } = await auth();
   const { inputState } = await request.json();
   const { text } = await generateText({
-    model: google("gemini-2.5-flash-lite"),
-    maxRetries: 0,
+    model: google(`${process.env.GEMINI_MODEL}`),
+    maxRetries: 3,
     prompt: `
     You are an expert fitness AI assistant named "WorkoutAI". Your primary goal is to provide a single, safe, effective, and easy-to-follow workout routine. You must strictly follow the directives below.
 

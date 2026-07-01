@@ -154,8 +154,8 @@ async function page({ params }: RouteParams) {
                   difficulty === "Easy"
                     ? "default"
                     : difficulty === "Medium"
-                    ? "secondary"
-                    : "destructive"
+                      ? "secondary"
+                      : "destructive"
                 }
               >
                 {difficulty}
@@ -211,7 +211,7 @@ async function page({ params }: RouteParams) {
             <ul className="space-y-3">
               {ingredients.map((ingredient: Ingredient, index: number) => (
                 <li key={index} className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
+                  <div className="w-2 h-2 bg-purple-500 rounded-full shrink-0" />
                   <span className="text-sm">
                     <span className="font-medium">
                       {ingredient.quantity} {ingredient.unit}
@@ -234,7 +234,7 @@ async function page({ params }: RouteParams) {
             <ol className="space-y-4">
               {instructions.map((instruction: Instruction) => (
                 <li key={instruction.step} className="flex gap-4">
-                  <div className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0">
+                  <div className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-medium shrink-0">
                     {instruction.step}
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
