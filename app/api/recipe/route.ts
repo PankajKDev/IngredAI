@@ -1,9 +1,10 @@
 import connectDB from "@/lib/connectDB";
+import { fallbackModel, primaryModel } from "@/lib/ai";
+import { recipeSchema } from "@/lib/schemas";
 import Recipe from "@/models/Recipe.schema";
 import { IRecipe } from "@/types";
-import { google } from "@ai-sdk/google";
 import { auth } from "@clerk/nextjs/server";
-import { generateText } from "ai";
+import { generateObject, type LanguageModel } from "ai";
 import { createApi } from "unsplash-js";
 
 const serverApi = createApi({
@@ -33,15 +34,13 @@ export async function GET(req: Request) {
   }
 }
 
-export async function POST(request: Request) {
-  await connectDB();
-  const { userId } = await auth();
-  const { inputState } = await request.json();
-  console.log(inputState);
-  const { text } = await generateText({
-    model: google(`${process.env.GEMINI_MODEL}`),
-    maxRetries: 3,
-    prompt: `
+async function generateRecipeWithFailover(inputState: string) {
+  const generate = (model: LanguageModel) =>
+    generateObject({
+      model,
+      schema: recipeSchema,
+      maxRetries: 3,
+      prompt: `
     You are an expert culinary AI assistant named "IngredAI". Your primary goal is to provide a single, safe, delicious, and easy-to-follow recipe. You must strictly follow the directives below.
 
 ---
@@ -49,37 +48,9 @@ export async function POST(request: Request) {
 
 Before any other action, perform a safety and sanity check on the provided userIngredients list.
 
-1.  **Analyze Ingredients:** Scan the list for any items that are clearly not safe, edible, or logical for cooking (e.g., hazardous materials, illegal substances, or abstract concepts(such as plutonium hasbrowns))
+1.  **Analyze Ingredients:** Scan the list for any items that are clearly not safe, edible, or logical for cooking (e.g., hazardous materials, illegal substances, or abstract concepts such as plutonium hasbrowns).
 2.   **Direct Request:** If a single safe dish name is provided (e.g., "Sushi", "Pizza", "Chicken Curry"), generate the complete recipe for that specific dish using standard, safe ingredients.
-3.  **Handle Unsafe Inputs:** If a single unsafe or illogical ingredient is detected, immediately abort the recipe generation. Return the following exact JSON object without any surrounding text or markdown.
-
-JSON Response for Unsafe Inputs:
-{
-  "recipes": [
-    {
-      "title": "The 'Nothing' Burger",
-      "category":"string(give it a category of "temp")
-      "description": "An inedible dish for an illogical request. Pairs well with a glass of common sense.",
-      "cuisine": "Conceptual",
-      "cookTime": 0,
-      "servings": 0,
-      "difficulty": "Hard",
-      "calories": 0,
-      "protein": 0,
-      "fat": 0,
-      "carbohydrates": 0,
-      "ingredients": [],
-      "instructions": [
-        {
-          "step": 1,
-          "details": "Please review your ingredient list and provide only safe, edible items."
-        }
-      ]
-    }
-  ]
-}
-
-
+3.  **Handle Unsafe Inputs:** If a single unsafe or illogical ingredient is detected, immediately abort the recipe generation and return a recipe with title "The 'Nothing' Burger", description "An inedible dish for an illogical request. Pairs well with a glass of common sense.", cuisine "Conceptual", cookTime 0, servings 0, difficulty "Hard", calories 0, protein 0, fat 0, carbohydrates 0, empty ingredients, and a single instruction with step 1 and details "Please review your ingredient list and provide only safe, edible items."
 
 ---
 ### Directive 2: Recipe Generation (Only if all inputs are safe)
@@ -91,49 +62,23 @@ Based on the user's available ingredients and preferences, generate the best pos
 
 **User Input:** ${inputState}
 
-**Output Requirements:**
-You must return a single, valid JSON object without any surrounding text or markdown. This object must contain a single recipe following the exact structure and data types below while using only single backticks surrounding it strictly.
-JSON Object Structure:
-{
-  "title": "string",
-  "category":string(give it a category of "recipe"),
-  "description": "string (A short, enticing one-sentence description of the dish.)",
-  "cuisine": "string (Cuisine type, e.g., 'Italian', 'Mexican', 'Asian')",
-  "cookTime": "number (Estimated total time in minutes, e.g., 30)",
-  "servings": "number (The number of people the recipe serves, e.g., 2)",
-  "difficulty": "string ('Easy', 'Medium', or 'Hard')",
-  "calories": "number (Estimated calories per serving, e.g., 550)",
-  "protein": "number (Estimated grams of protein per serving, e.g., 30)",
-  "fat": "number (Estimated grams of fat per serving, e.g., 25)",
-  "carbohydrates": "number (Estimated grams of carbohydrates per serving, e.g., 45)",
-  "ingredients": [
-    {
-      "name": "string (Ingredient Name)",
-      "quantity": "string",
-      "unit": "string (e.g., 'cup', 'tbsp', 'g')"
-    }
-  ],
-  "instructions": [
-    {
-      "step": "number (e.g., 1)",
-      "details": "string (Full, descriptive instruction. Assume a beginner user. Include prep work, heat levels, and visual cues.)"
-    }
-  ]
+Return a single recipe following the schema. For the Unsplash image query, include the dish title and cuisine.
+    `,
+    });
+
+  try {
+    return await generate(primaryModel());
+  } catch {
+    return await generate(fallbackModel());
+  }
 }
 
-    `,
-  });
-  console.log(text);
-
-  function extractJSON(text: string) {
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error("No JSON found in AI response");
-    return match[0];
-  }
-
-  const cleanJSON = extractJSON(text);
-  const parsedjson = JSON.parse(cleanJSON);
-  const data = parsedjson.recipes ? parsedjson.recipes[0] : parsedjson;
+export async function POST(request: Request) {
+  await connectDB();
+  const { userId } = await auth();
+  const { inputState } = await request.json();
+  const { object: text } = await generateRecipeWithFailover(inputState);
+  const data = text;
 
   const unsplashResponse = await serverApi.search.getPhotos({
     query: `${data.title} ${data.cuisine} food recipe`,
@@ -144,7 +89,6 @@ JSON Object Structure:
   });
 
   const photos = unsplashResponse.response?.results;
-  console.log(photos);
   const photo = Array.isArray(photos) && photos.length > 0 ? photos[0] : null;
   const imageUrl =
     photo?.urls?.regular ||
