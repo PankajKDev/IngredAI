@@ -19,6 +19,7 @@ import DeleteButton from "@/components/shared/DeleteButton";
 import { SignedIn } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Share from "@/components/shared/Share";
+import { RecipeStepReader } from "@/components/shared/Recipe/RecipeStepReader";
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -228,7 +229,10 @@ async function page({ params }: RouteParams) {
 
         <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-xl">Instructions</CardTitle>
+            <div className="flex items-center justify-between gap-4">
+              <CardTitle className="text-xl">Instructions</CardTitle>
+              <RecipeStepReader instructions={instructions} />
+            </div>
           </CardHeader>
           <CardContent>
             <ol className="space-y-4">
