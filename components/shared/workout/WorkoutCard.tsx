@@ -1,9 +1,10 @@
 "use client";
 import type React from "react";
 import type { IWorkout } from "@/types";
-import { Clock, Flame, Dumbbell, LucideDumbbell } from "lucide-react";
+import { Clock, Flame, Dumbbell } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ViewButton from "@/components/ui/ViewButton";
+import Image from "next/image";
 
 interface WorkoutCardProps {
   workout: IWorkout;
@@ -28,10 +29,12 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/10 group">
       <div className="relative h-48 overflow-hidden">
-        <img
+        <Image
           src={workout.image}
           alt={workout.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 

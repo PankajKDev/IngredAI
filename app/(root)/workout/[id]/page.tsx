@@ -8,7 +8,8 @@ import {
   TargetIcon,
 } from "lucide-react";
 import Link from "next/link";
-import AnimLoading from "@/components/shared/AnimLoading";
+import Image from "next/image";
+import { fetchWorkout } from "@/lib/data";
 import { SignedIn } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Share from "@/components/shared/Share";
@@ -18,30 +19,37 @@ export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
   const { id } = await params;
-  const response = await fetch(
-    `${process.env.NEXT_BASE_URL}/api/workout/${id}`
-  );
-
-  const workout = await response.json();
+  const workout = await fetchWorkout(id);
 
   return {
-    title: `${workout.title} - IngredAI`,
-    description: workout.description || `${workout.name} with IngredAI`,
+    title: `${workout?.title ?? "Workout"} - IngredAI`,
+    description: workout?.description || "Workout with IngredAI",
     openGraph: {
-      title: workout.title,
-      description: workout.description,
-      images: workout.imageUrl,
+      title: workout?.title ?? "Workout",
+      description: workout?.description,
+      images: workout?.image,
     },
   };
 }
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
-  const response = await fetch(
-    `${process.env.NEXT_BASE_URL}/api/workout/${id}`
-  );
-
-  const fetchedWorkout = await response.json();
+  const fetchedWorkout = await fetchWorkout(id);
+  if (!fetchedWorkout) {
+    return (
+      <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
+        <h2 className="text-2xl font-sans font-semibold text-red-600">
+          Invalid workout id
+        </h2>
+        <Link
+          className="border hover:bg-black hover:text-white  h-8 flex justify-center items-center  w-18 rounded-lg bg-white text-black"
+          href="/"
+        >
+          Home
+        </Link>
+      </div>
+    );
+  }
   const {
     _id,
     userId,
@@ -58,25 +66,14 @@ async function page({ params }: RouteParams) {
     workout,
     cooldown,
   } = fetchedWorkout;
-  const { userId: sharedUserId } = await auth();
+  const { userId: viewerId } = await auth();
+  const isOwner = viewerId && userId == viewerId;
   const client = await clerkClient();
-  const sharingUser = await client.users.getUser(sharedUserId!);
-  if (!response.ok) {
-    return (
-      <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
-        <AnimLoading mode="workout" />
-        <h2 className="text-2xl font-sans font-semibold text-red-600">
-          Invalid workout id
-        </h2>
-        <Link
-          className="border hover:bg-black hover:text-white  h-8 flex justify-center items-center  w-18 rounded-lg bg-white text-black"
-          href="/"
-        >
-          Home
-        </Link>
-      </div>
-    );
-  }
+  const sharingUser = viewerId
+    ? isOwner
+      ? null
+      : await client.users.getUser(userId)
+    : null;
   return (
     <div className="min-h-screen  text-white">
       <div className="container mx-auto px-6 py-12 max-w-5xl">
@@ -90,13 +87,13 @@ async function page({ params }: RouteParams) {
                 <ArrowLeft className="w-4 h-4" />
                 Back to Workouts
               </Link>
-              {userId == userId ? (
+              {isOwner ? (
                 <DeleteButton id={_id} mode="workout" />
               ) : (
                 <h1 className="text-muted-foreground font-san hover:text-foreground transition-colors mb-6">
                   Shared by:{" "}
                   <span className="text-white text-md font-sans">
-                    {sharingUser.firstName}
+                    {sharingUser?.firstName}
                   </span>
                 </h1>
               )}
@@ -104,10 +101,13 @@ async function page({ params }: RouteParams) {
           </SignedIn>
 
           <div className="relative w-full h-80 mb-8 rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src={image || "/placeholder.svg"}
+            <Image
+              src={image || "https://placehold.co/600x400/black/orange?text=IngredAI"}
               alt={title}
-              className=" object-center"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6">

@@ -3,6 +3,7 @@ import { FavouriteRecipeById } from "@/lib/actions/general.action";
 import { IRecipe } from "@/types";
 import { Heart, Clock, Users } from "lucide-react";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 interface RecipeCardProps {
   recipe: IRecipe;
@@ -12,10 +13,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700/50 hover:border-purple-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 group">
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={recipe.imageUrl}
+        <Image
+          src={recipe.imageUrl || "https://placehold.co/600x400/black/orange?text=IngredAI"}
           alt={recipe.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 

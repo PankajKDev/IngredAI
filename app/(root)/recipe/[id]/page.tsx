@@ -14,46 +14,36 @@ import {
   Wheat,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import DeleteButton from "@/components/shared/DeleteButton";
 import { SignedIn } from "@clerk/nextjs";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Share from "@/components/shared/Share";
 import { RecipeStepReader } from "@/components/shared/Recipe/RecipeStepReader";
+import { fetchRecipe } from "@/lib/data";
 import { Metadata } from "next";
 
 export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
   const { id } = await params;
-  const response = await fetch(`${process.env.NEXT_BASE_URL}/api/recipe/${id}`);
-  const recipe = await response.json();
+  const recipe = await fetchRecipe(id);
   return {
-    title: `${recipe.title} - IngredAI`,
+    title: `${recipe?.title ?? "Recipe"} - IngredAI`,
     description:
-      recipe.description || `easy recipe to make ${recipe.name} with IngredAI`,
+      recipe?.description || `Easy recipe to make with IngredAI`,
     openGraph: {
-      title: recipe.title,
-      description: recipe.description,
-      images: recipe.imageUrl,
+      title: recipe?.title ?? "Recipe",
+      description: recipe?.description,
+      images: recipe?.imageUrl,
     },
   };
 }
 
 async function page({ params }: RouteParams) {
   const { id } = await params;
-  const response = await fetch(`${process.env.NEXT_BASE_URL}/api/recipe/${id}`);
-  if (!response.ok) {
-    return (
-      <div className="min-h-[80vh] w-full flex justify-center items-center">
-        <h1 className="text-3xl font-sans text-red-600">
-          Error Fetching Recipe
-        </h1>
-      </div>
-    );
-  }
-  const recipe = await response.json();
-  console.log(recipe);
+  const recipe = await fetchRecipe(id);
   if (!recipe) {
     return (
       <div className="min-h-[80vh] gap-6 flex-col flex justify-center items-center">
@@ -84,14 +74,16 @@ async function page({ params }: RouteParams) {
     difficulty,
     instructions,
     ingredients,
-  } = await recipe;
+  } = recipe;
 
   const { userId } = await auth();
+  const isOwner = userId && recipe.userId == userId;
   const client = await clerkClient();
-  const sharingUser = await client.users.getUser(recipe.userId);
-
-  const fmt = (v: unknown) =>
-    v === null || v === undefined || v === "" ? "—" : String(v);
+  const sharingUser = isOwner
+    ? null
+    : userId
+      ? await client.users.getUser(recipe.userId)
+      : null;
 
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -104,13 +96,13 @@ async function page({ params }: RouteParams) {
             <ArrowLeft className="w-4 h-4" />
             Back to Recipes
           </Link>
-          {recipe.userId == userId ? (
-            <DeleteButton id={_id} mode="recipe" />
+          {isOwner ? (
+            <DeleteButton id={_id!} mode="recipe" />
           ) : (
             <h1 className="text-muted-foreground font-san hover:text-foreground transition-colors mb-6">
               Shared by:{" "}
               <span className="text-white text-md font-sans">
-                {sharingUser.firstName}
+                {sharingUser?.firstName}
               </span>
             </h1>
           )}
@@ -119,10 +111,13 @@ async function page({ params }: RouteParams) {
       {/* Recipe Header */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div className="relative overflow-hidden rounded-lg">
-          <img
-            src={imageUrl || "/placeholder.svg"}
+          <Image
+            src={imageUrl || "https://placehold.co/600x400/black/orange?text=IngredAI"}
             alt={title}
-            className="w-full h-80 object-cover"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
           />
         </div>
 
