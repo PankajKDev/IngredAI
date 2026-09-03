@@ -39,7 +39,7 @@ async function generateRecipeWithFailover(inputState: string) {
     generateObject({
       model,
       schema: recipeSchema,
-      maxRetries: 3,
+      maxRetries: 1,
       prompt: `
     You are an expert culinary AI assistant named "IngredAI". Your primary goal is to provide a single, safe, delicious, and easy-to-follow recipe. You must strictly follow the directives below.
 

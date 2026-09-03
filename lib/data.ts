@@ -5,10 +5,14 @@ import { IRecipe, IWorkout } from "@/types";
 
 export async function fetchRecipe(id: string): Promise<IRecipe | null> {
   await connectDB();
-  return Recipe.findOne({ _id: id }).lean() as unknown as Promise<IRecipe | null>;
+  const doc = await Recipe.findOne({ _id: id }).lean();
+  if (!doc) return null;
+  return { ...(doc as IRecipe), _id: String((doc as IRecipe)._id) };
 }
 
 export async function fetchWorkout(id: string): Promise<IWorkout | null> {
   await connectDB();
-  return Workout.findOne({ _id: id }).lean() as unknown as Promise<IWorkout | null>;
+  const doc = await Workout.findOne({ _id: id }).lean();
+  if (!doc) return null;
+  return { ...(doc as unknown as IWorkout), _id: String((doc as unknown as IWorkout)._id) };
 }

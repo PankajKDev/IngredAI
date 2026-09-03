@@ -31,7 +31,7 @@ const exerciseSchema = z.object({
   duration: z.string(),
   reps: z.string(),
   sets: z.number(),
-  restBetweenSets: z.string().optional(),
+  restBetweenSets: z.string(),
   instructions: z.string(),
 });
 

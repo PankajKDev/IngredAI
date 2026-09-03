@@ -15,7 +15,7 @@ async function generateWorkoutWithFailover(inputState: string) {
     generateObject({
       model,
       schema: workoutSchema,
-      maxRetries: 3,
+      maxRetries: 1,
       prompt: `
     You are an expert fitness AI assistant named "IngredAI". Your primary goal is to provide a single, safe, effective, and easy-to-follow workout routine. You must strictly follow the directives below.
 
@@ -35,7 +35,7 @@ Based on the user's fitness level, available equipment, time constraints, and go
 
 **User Input:** ${inputState}
 
-Return a single workout routine following the schema. The "image" field is a name of a fitness image to search on Unsplash (e.g., 'home gym workout fitness').
+Return a single workout routine following the schema. The "image" field is a name of a fitness image to search on Unsplash (e.g., 'home gym workout fitness'). When an exercise has no fixed rest period, set restBetweenSets to an empty string "".
     `,
     });
 
