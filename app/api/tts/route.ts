@@ -1,4 +1,4 @@
-import { Communicate } from "edge-tts-universal";
+import { IsomorphicCommunicate } from "edge-tts-universal";
 import { cleanForTTS } from "@/lib/tts";
 
 export const runtime = "nodejs";
@@ -14,14 +14,14 @@ export async function GET(req: Request) {
     return Response.json({ error: "Missing text parameter" }, { status: 400 });
   }
 
-  const communicate = new Communicate(cleanForTTS(text), {
+  const communicate = new IsomorphicCommunicate(cleanForTTS(text), {
     voice: VOICE,
     rate: "-15%",
     pitch: "+2Hz",
   });
 
   try {
-    const chunks: Buffer[] = [];
+    const chunks: Uint8Array[] = [];
     for await (const chunk of communicate.stream()) {
       if (chunk.type === "audio" && chunk.data) {
         chunks.push(chunk.data);
